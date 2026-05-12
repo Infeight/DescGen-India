@@ -1,21 +1,67 @@
 "use client";
 
 import { useState } from "react";
+
 import { useForm } from "react-hook-form";
+
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { useRouter } from "next/navigation";
 
+import {
+  Sparkles,
+  Copy,
+  RefreshCw,
+  Wand2,
+} from "lucide-react";
+
 const formSchema = z.object({
-  productName: z.string().min(3, "Product name must be at least 3 characters"),
-  features:    z.string().min(10, "Features must be at least 10 characters"),
-  platform:    z.string().min(1, "Please select a platform"),
-  tone:        z.string().min(1, "Please select a tone"),
-  language:    z.string().min(1, "Please select a language"),
+  productName: z
+    .string()
+    .min(
+      3,
+      "Product name must be at least 3 characters"
+    ),
+
+  features: z
+    .string()
+    .min(
+      10,
+      "Features must be at least 10 characters"
+    ),
+
+  platform: z
+    .string()
+    .min(
+      1,
+      "Please select a platform"
+    ),
+
+  tone: z
+    .string()
+    .min(
+      1,
+      "Please select a tone"
+    ),
+
+  language: z
+    .string()
+    .min(
+      1,
+      "Please select a language"
+    ),
 });
 
-type FormData = z.infer<typeof formSchema>;
-type VariantKey = "v1" | "v2" | "v3";
+type FormData = z.infer<
+  typeof formSchema
+>;
+
+type VariantKey =
+  | "v1"
+  | "v2"
+  | "v3";
 
 interface GenerateResponse {
   v1: string;
@@ -23,165 +69,325 @@ interface GenerateResponse {
   v3: string;
 }
 
-const VARIANT_LABELS: Record<VariantKey, string> = {
+const VARIANT_LABELS: Record<
+  VariantKey,
+  string
+> = {
   v1: "Emotional",
   v2: "Features",
   v3: "Punchy",
 };
 
 export default function GeneratePage() {
-  const [loading,      setLoading]      = useState(false);
-  const [result,       setResult]       = useState<GenerateResponse | null>(null);
-  const [copied,       setCopied]       = useState("");
-  const [error,        setError]        = useState("");
-  const [success,      setSuccess]      = useState("");
-  const [regenerating, setRegenerating] = useState<VariantKey | null>(null);  // ← new
-  const [lastFormData, setLastFormData] = useState<FormData | null>(null);    // ← new
+  const [loading, setLoading] =
+    useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const [result, setResult] =
+    useState<GenerateResponse | null>(
+      null
+    );
+
+  const [copied, setCopied] =
+    useState("");
+
+  const [error, setError] =
+    useState("");
+
+  const [success, setSuccess] =
+    useState("");
+
+  const [
+    regenerating,
+    setRegenerating,
+  ] = useState<VariantKey | null>(
+    null
+  );
+
+  const [
+    lastFormData,
+    setLastFormData,
+  ] = useState<FormData | null>(
+    null
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver:
+      zodResolver(formSchema),
   });
 
   const router = useRouter();
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(
+    data: FormData
+  ) {
     try {
       setLoading(true);
+
       setResult(null);
+
       setError("");
+
       setSuccess("");
-      setLastFormData(data);  // ← save form values for regenerate
 
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      setLastFormData(data);
 
-      const json = await response.json();
+      const response =
+        await fetch(
+          "/api/generate",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify(
+              data
+            ),
+          }
+        );
+
+      const json =
+        await response.json();
 
       if (!response.ok) {
-        if (response.status === 403 && json.code === "NO_CREDITS") {
-          setError("No credits remaining. Upgrade required.");
+        if (
+          response.status ===
+            403 &&
+          json.code ===
+            "NO_CREDITS"
+        ) {
+          setError(
+            "No credits remaining. Upgrade required."
+          );
+
           return;
         }
-        setError(json.error || "Something went wrong");
+
+        setError(
+          json.error ||
+            "Something went wrong"
+        );
+
         return;
       }
 
       setResult(json);
-      setSuccess("Descriptions generated successfully.");
+
+      setSuccess(
+        "Descriptions generated successfully."
+      );
+
       router.refresh();
+
     } catch (err) {
       console.error(err);
-      setError("Generation failed. Please try again.");
+
+      setError(
+        "Generation failed. Please try again."
+      );
+
     } finally {
       setLoading(false);
     }
   }
 
-  // ── Regenerate single variant ──────────────────────────────────────────────
-  async function handleRegenerate(variant: VariantKey) {
+  async function handleRegenerate(
+    variant: VariantKey
+  ) {
     if (!lastFormData) return;
+
     setRegenerating(variant);
+
     setError("");
 
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...lastFormData,
-          onlyVariant: variant,   // ← tells API to generate only this variant
-        }),
-      });
+      const response =
+        await fetch(
+          "/api/generate",
+          {
+            method: "POST",
 
-      const json = await response.json();
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              ...lastFormData,
+
+              onlyVariant:
+                variant,
+            }),
+          }
+        );
+
+      const json =
+        await response.json();
 
       if (!response.ok) {
-        if (response.status === 403 && json.code === "NO_CREDITS") {
-          setError("No credits remaining. Upgrade required.");
+        if (
+          response.status ===
+            403 &&
+          json.code ===
+            "NO_CREDITS"
+        ) {
+          setError(
+            "No credits remaining. Upgrade required."
+          );
+
           return;
         }
-        setError(json.error || "Regeneration failed.");
+
+        setError(
+          json.error ||
+            "Regeneration failed."
+        );
+
         return;
       }
 
-      // merge only the regenerated variant into existing result
       setResult((prev) => {
         if (!prev) return prev;
-        return { ...prev, [variant]: json[variant] };  // ← only update one key
+
+        return {
+          ...prev,
+          [variant]:
+            json[variant],
+        };
       });
+
       router.refresh();
 
     } catch (err) {
       console.error(err);
-      setError("Regeneration failed. Please try again.");
+
+      setError(
+        "Regeneration failed. Please try again."
+      );
+
     } finally {
       setRegenerating(null);
     }
   }
 
-  async function handleCopy(text: string, key: string) {
+  async function handleCopy(
+    text: string,
+    key: string
+  ) {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(
+        text
+      );
+
       setCopied(key);
-      setTimeout(() => setCopied(""), 30000);
+
+      setTimeout(
+        () => setCopied(""),
+        2000
+      );
+
     } catch (err) {
       console.error(err);
     }
   }
 
-  // ── Variant card ───────────────────────────────────────────────────────────
-  function VariantCard({ variantKey, text }: { variantKey: VariantKey; text: string }) {
-    const isRegenerating = regenerating === variantKey;
-    const isCopied       = copied === variantKey;
+  function VariantCard({
+    variantKey,
+    text,
+  }: {
+    variantKey: VariantKey;
+    text: string;
+  }) {
+    const isRegenerating =
+      regenerating === variantKey;
+
+    const isCopied =
+      copied === variantKey;
 
     return (
-      <div className="rounded-2xl border bg-white p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="font-semibold">
-              Variant {variantKey.replace("v", "")}
-            </h2>
-            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-              {VARIANT_LABELS[variantKey]}
-            </span>
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20">
+              <Sparkles className="h-5 w-5 text-fuchsia-400" />
+            </div>
+
+            <div>
+              <h2 className="font-semibold text-white">
+                Variant{" "}
+                {variantKey.replace(
+                  "v",
+                  ""
+                )}
+              </h2>
+
+              <p className="text-sm text-gray-400">
+                {
+                  VARIANT_LABELS[
+                    variantKey
+                  ]
+                }
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Redo button */}
             <button
-              onClick={() => handleRegenerate(variantKey)}
-              disabled={isRegenerating || !!regenerating}
-              className="rounded-lg border px-3 py-1 text-sm transition
-                         hover:bg-gray-100 disabled:cursor-not-allowed
-                         disabled:opacity-40 active:scale-95"
+              onClick={() =>
+                handleRegenerate(
+                  variantKey
+                )
+              }
+              disabled={
+                isRegenerating ||
+                !!regenerating
+              }
+              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10 disabled:opacity-40"
             >
-              {isRegenerating ? "Redoing..." : "↺ Redo"}
+              <RefreshCw className="h-4 w-4" />
+
+              {isRegenerating
+                ? "Redoing..."
+                : "Redo"}
             </button>
 
-            {/* Copy button */}
             <button
-              onClick={() => handleCopy(text, variantKey)}
-              disabled={isRegenerating}
-              className="rounded-lg border px-3 py-1 text-sm transition
-                         hover:bg-gray-100 disabled:opacity-40"
+              onClick={() =>
+                handleCopy(
+                  text,
+                  variantKey
+                )
+              }
+              disabled={
+                isRegenerating
+              }
+              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10 disabled:opacity-40"
             >
-              {isCopied ? "Copied!" : "Copy"}
+              <Copy className="h-4 w-4" />
+
+              {isCopied
+                ? "Copied!"
+                : "Copy"}
             </button>
           </div>
         </div>
 
-        {/* Show shimmer while regenerating this variant */}
         {isRegenerating ? (
-          <div className="space-y-2 animate-pulse">
-            <div className="h-3 w-full rounded bg-gray-100" />
-            <div className="h-3 w-5/6 rounded bg-gray-100" />
-            <div className="h-3 w-4/6 rounded bg-gray-100" />
+          <div className="space-y-3 animate-pulse">
+            <div className="h-4 rounded bg-white/10" />
+
+            <div className="h-4 w-5/6 rounded bg-white/10" />
+
+            <div className="h-4 w-4/6 rounded bg-white/10" />
           </div>
         ) : (
-          <p className="whitespace-pre-wrap text-sm leading-7 text-gray-700">
+          <p className="whitespace-pre-wrap text-sm leading-8 text-gray-300">
             {text}
           </p>
         )}
@@ -190,76 +396,282 @@ export default function GeneratePage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-6 p-6">
-      <h1 className="text-3xl font-bold">Generate Description</h1>
+    <div className="relative flex flex-col gap-8">
+      {/* Glow */}
+      <div className="absolute left-1/2 top-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
 
+      {/* Header */}
+      <div className="relative">
+        <div className="flex items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 shadow-lg shadow-fuchsia-500/20">
+            <Wand2 className="h-6 w-6 text-white" />
+          </div>
+
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight text-white">
+              AI Description Studio
+            </h1>
+
+            <p className="mt-1 text-gray-400">
+              Generate marketplace-ready
+              product descriptions with
+              AI.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Alerts */}
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-300">
           {error}
         </div>
       )}
+
       {success && (
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-300">
           {success}
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 rounded-xl border p-6">
-        <div className="flex flex-col gap-1">
-          <input placeholder="Product Name" className="rounded border p-3" {...register("productName")} />
-          {errors.productName && <p className="text-sm text-red-500">{errors.productName.message}</p>}
+      {/* Workspace */}
+      <div className="grid gap-8 xl:grid-cols-[420px_1fr]">
+        {/* LEFT PANEL */}
+        <div className="rounded-[32px] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
+          <div className="mb-7">
+            <h2 className="text-xl font-semibold text-white">
+              Product Details
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-400">
+              Configure your AI
+              generation settings.
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleSubmit(
+              onSubmit
+            )}
+            className="flex flex-col gap-5"
+          >
+            {/* Product Name */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-300">
+                Product Name
+              </label>
+
+              <input
+                placeholder="Enter product name"
+                className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition focus:border-fuchsia-500/40"
+                {...register(
+                  "productName"
+                )}
+              />
+
+              {errors.productName && (
+                <p className="text-sm text-red-400">
+                  {
+                    errors
+                      .productName
+                      .message
+                  }
+                </p>
+              )}
+            </div>
+
+            {/* Features */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-300">
+                Product Features
+              </label>
+
+              <textarea
+                placeholder="Enter product features"
+                className="min-h-[140px] rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition focus:border-fuchsia-500/40"
+                {...register(
+                  "features"
+                )}
+              />
+
+              {errors.features && (
+                <p className="text-sm text-red-400">
+                  {
+                    errors
+                      .features
+                      .message
+                  }
+                </p>
+              )}
+            </div>
+
+            {/* Selects */}
+            {[
+              {
+                name:
+                  "platform",
+
+                label:
+                  "Platform",
+
+                options: [
+                  "Meesho",
+                  "Flipkart",
+                  "Amazon",
+                  "Instagram",
+                ],
+              },
+
+              {
+                name:
+                  "tone",
+
+                label:
+                  "Tone",
+
+                options: [
+                  "Friendly",
+                  "Luxury",
+                  "Professional",
+                  "Emotional",
+                ],
+              },
+
+              {
+                name:
+                  "language",
+
+                label:
+                  "Language",
+
+                options: [
+                  "English",
+                  "Hindi",
+                  "Telugu",
+                ],
+              },
+            ].map(
+              (
+                field
+              ) => (
+                <div
+                  key={
+                    field.name
+                  }
+                  className="flex flex-col gap-2"
+                >
+                  <label className="text-sm font-medium text-gray-300">
+                    {
+                      field.label
+                    }
+                  </label>
+
+                  <select
+                    className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition focus:border-fuchsia-500/40"
+                    {...register(
+                      field.name as keyof FormData
+                    )}
+                  >
+                    <option value="">
+                      Select{" "}
+                      {
+                        field.label
+                      }
+                    </option>
+
+                    {field.options.map(
+                      (
+                        option
+                      ) => (
+                        <option
+                          key={
+                            option
+                          }
+                          value={
+                            option
+                          }
+                        >
+                          {
+                            option
+                          }
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+              )
+            )}
+
+            {/* Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-3 flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-6 py-4 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:scale-[1.01] disabled:opacity-50"
+            >
+              <Sparkles className="h-5 w-5" />
+
+              {loading
+                ? "Generating..."
+                : "Generate Descriptions"}
+            </button>
+          </form>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <textarea placeholder="Product Features" className="min-h-[120px] rounded border p-3" {...register("features")} />
-          {errors.features && <p className="text-sm text-red-500">{errors.features.message}</p>}
-        </div>
+        {/* RIGHT PANEL */}
+        <div className="flex flex-col gap-5">
+          {!result &&
+            !loading && (
+              <div className="flex h-full min-h-[500px] flex-col items-center justify-center rounded-[32px] border border-dashed border-white/10 bg-white/5 p-10 text-center">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-fuchsia-500/10 to-cyan-500/10">
+                  <Sparkles className="h-10 w-10 text-fuchsia-400" />
+                </div>
 
-        <div className="flex flex-col gap-1">
-          <select className="rounded border p-3" {...register("platform")}>
-            <option value="">Select Platform</option>
-            <option value="Meesho">Meesho</option>
-            <option value="Flipkart">Flipkart</option>
-            <option value="Amazon">Amazon</option>
-            <option value="Instagram">Instagram</option>
-          </select>
-          {errors.platform && <p className="text-sm text-red-500">{errors.platform.message}</p>}
-        </div>
+                <h2 className="mt-6 text-2xl font-semibold text-white">
+                  Ready to Generate
+                </h2>
 
-        <div className="flex flex-col gap-1">
-          <select className="rounded border p-3" {...register("tone")}>
-            <option value="">Select Tone</option>
-            <option value="Friendly">Friendly</option>
-            <option value="Luxury">Luxury</option>
-            <option value="Professional">Professional</option>
-            <option value="Emotional">Emotional</option>
-          </select>
-          {errors.tone && <p className="text-sm text-red-500">{errors.tone.message}</p>}
-        </div>
+                <p className="mt-3 max-w-md text-gray-400">
+                  Fill in product details
+                  and let AI generate
+                  optimized descriptions
+                  for Indian marketplaces.
+                </p>
+              </div>
+            )}
 
-        <div className="flex flex-col gap-1">
-          <select className="rounded border p-3" {...register("language")}>
-            <option value="">Select Language</option>
-            <option value="English">English</option>
-            <option value="Hindi">Hindi</option>
-            <option value="Telugu">Telugu</option>
-          </select>
-          {errors.language && <p className="text-sm text-red-500">{errors.language.message}</p>}
-        </div>
+          {loading && (
+            <div className="flex flex-col gap-5">
+              {[1, 2, 3].map(
+                (i) => (
+                  <div
+                    key={i}
+                    className="h-48 animate-pulse rounded-[32px] border border-white/10 bg-white/5"
+                  />
+                )
+              )}
+            </div>
+          )}
 
-        <button type="submit" disabled={loading}
-          className="rounded bg-black p-3 text-white disabled:opacity-50">
-          {loading ? "Generating..." : "Generate"}
-        </button>
-      </form>
+          {result && (
+            <>
+              <VariantCard
+                variantKey="v1"
+                text={result.v1}
+              />
 
-      {result && (
-        <div className="flex flex-col gap-4">
-          <VariantCard variantKey="v1" text={result.v1} />
-          <VariantCard variantKey="v2" text={result.v2} />
-          <VariantCard variantKey="v3" text={result.v3} />
+              <VariantCard
+                variantKey="v2"
+                text={result.v2}
+              />
+
+              <VariantCard
+                variantKey="v3"
+                text={result.v3}
+              />
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
