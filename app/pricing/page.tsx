@@ -42,13 +42,13 @@ const PLANS = [
 
     name: "Starter",
 
-    price: 199,
+    price: 99,
 
     credits: 100,
 
     icon: Rocket,
 
-    razorpayAmount: 199,
+    razorpayAmount: 99,
 
     description:
       "Ideal for growing sellers scaling their listings.",
@@ -100,13 +100,13 @@ const PLANS = [
 
     name: "Business",
 
-    price: 799,
+    price: 999,
 
     credits: -1,
 
     icon: Building2,
 
-    razorpayAmount: 799,
+    razorpayAmount: 999,
 
     description:
       "Built for high-volume AI commerce operations.",
@@ -227,7 +227,7 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="relative overflow-hidden px-6 py-20">
+    <div className="relative overflow-hidden bg-black px-6 py-20">
       {/* Glow */}
       <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
 

@@ -108,45 +108,108 @@ export default function DashboardLayout({
   const [plan, setPlan] =
     useState("free");
 
+  // useEffect(() => {
+  //   async function load() {
+  //     const {
+  //       data: { user },
+  //     } =
+  //       await supabase.auth.getUser();
+
+  //     if (!user) return;
+
+  //     setEmail(
+  //       user.email ?? ""
+  //     );
+
+  //     const { data } =
+  //       await supabase
+  //         .from("profiles")
+  //         .select(`
+  //           credits_remaining,
+  //           plan
+  //         `)
+  //         .eq(
+  //           "id",
+  //           user.id
+  //         )
+  //         .single();
+
+  //     if (data) {
+  //       setCredits(
+  //         data.credits_remaining
+  //       );
+
+  //       setPlan(
+  //         data.plan
+  //       );
+  //     }
+  //   }
+
+  //   load();
+  // }, []);
+
   useEffect(() => {
-    async function load() {
-      const {
-        data: { user },
-      } =
-        await supabase.auth.getUser();
+  let channel: any;
 
-      if (!user) return;
+  async function load() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-      setEmail(
-        user.email ?? ""
-      );
+    if (!user) return;
 
-      const { data } =
-        await supabase
-          .from("profiles")
-          .select(`
-            credits_remaining,
-            plan
-          `)
-          .eq(
-            "id",
-            user.id
-          )
-          .single();
+    setEmail(user.email ?? "");
 
-      if (data) {
-        setCredits(
-          data.credits_remaining
-        );
+    // Initial credits fetch
+    const { data } = await supabase
+      .from("profiles")
+      .select("credits_remaining")
+      .eq("id", user.id)
+      .single();
 
-        setPlan(
-          data.plan
-        );
-      }
+    if (data) {
+      setCredits(data.credits_remaining);
     }
 
-    load();
-  }, []);
+    // Realtime subscription
+    channel = supabase
+      .channel(`credits-${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "profiles",
+          filter: `id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log(
+            "REALTIME CREDIT UPDATE:",
+            payload
+          );
+
+          const updatedCredits =
+            payload.new
+              .credits_remaining;
+
+          setCredits(
+            updatedCredits
+          );
+        }
+      )
+      .subscribe();
+  }
+
+  load();
+
+  return () => {
+    if (channel) {
+      supabase.removeChannel(
+        channel
+      );
+    }
+  };
+}, []);
 
   async function handleLogout() {
     await supabase.auth.signOut();

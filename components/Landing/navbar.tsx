@@ -33,7 +33,7 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-4">
           <Link
-            href="/auth/login"
+            href="/auth/signin"
             className="text-sm text-gray-300 transition hover:text-white"
           >
             Login

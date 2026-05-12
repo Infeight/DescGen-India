@@ -10,6 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
+import { ratelimit } from "@/lib/ratelimit";
+
 import {
   Sparkles,
   Copy,

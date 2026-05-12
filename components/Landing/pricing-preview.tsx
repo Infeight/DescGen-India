@@ -64,7 +64,7 @@ const plans = [
   {
     name: "Business",
 
-    price: "Custom",
+    price: "₹999",
 
     credits: "Unlimited",
 

@@ -197,6 +197,7 @@ import { NextResponse } from "next/server";
 import { generateDescriptions } from "@/lib/gemini";
 import { createClient } from "@/lib/supabase/server";
 import { VariantKey } from "@/lib/prompt";
+import { ratelimit } from "@/lib/ratelimit";
 
 export async function POST(req: Request) {
   try {
@@ -223,6 +224,23 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { success } =
+  await ratelimit.limit(
+    user.id
+  );
+
+if (!success) {
+  return NextResponse.json(
+    {
+      error:
+        "Too many requests. Please slow down.",
+    },
+    {
+      status: 429,
+    }
+  );
+}
 
     // credits check — always required regardless of regenerate or full
    const { data: profile } = await supabase
