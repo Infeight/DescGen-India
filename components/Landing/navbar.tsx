@@ -1,13 +1,25 @@
+"use client";
+
 import Link from "next/link";
 
+import { useState } from "react";
+
+import {
+  Menu,
+  X,
+} from "lucide-react";
+
 export default function Navbar() {
+  const [open, setOpen] =
+    useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6">
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold tracking-tight"
+          className="text-xl font-bold tracking-tight text-white sm:text-2xl"
         >
           DescGen
           <span className="text-fuchsia-500">
@@ -15,23 +27,32 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav */}
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-8 text-sm text-gray-300 md:flex">
-          <a href="#features">
+          <a
+            href="#features"
+            className="transition hover:text-white"
+          >
             Features
           </a>
 
-          <a href="/#pricing">
+          <a
+            href="/#pricing"
+            className="transition hover:text-white"
+          >
             Pricing
           </a>
 
-          <a href="/#demo">
+          <a
+            href="/#demo"
+            className="transition hover:text-white"
+          >
             Demo
           </a>
         </nav>
 
-        {/* Actions */}
-        <div className="flex items-center gap-4">
+        {/* Desktop Actions */}
+        <div className="hidden items-center gap-4 md:flex">
           <Link
             href="/auth/signin"
             className="text-sm text-gray-300 transition hover:text-white"
@@ -46,7 +67,99 @@ export default function Navbar() {
             Start Free
           </Link>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() =>
+            setOpen(!open)
+          }
+          className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white md:hidden"
+        >
+          {open ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div className="border-t border-white/10 bg-black/95 px-4 py-5 backdrop-blur-2xl md:hidden">
+          <nav className="flex flex-col gap-5 text-sm text-gray-300">
+            <a
+              href="#features"
+              onClick={() =>
+                setOpen(false)
+              }
+              className="transition hover:text-white"
+            >
+              Features
+            </a>
+
+            <a
+              href="/#pricing"
+              onClick={() =>
+                setOpen(false)
+              }
+              className="transition hover:text-white"
+            >
+              Pricing
+            </a>
+
+            <a
+              href="/#demo"
+              onClick={() =>
+                setOpen(false)
+              }
+              className="transition hover:text-white"
+            >
+              Demo
+            </a>
+
+            <div className="mt-2 flex flex-col gap-3">
+           <div className="mt-2 flex flex-col gap-3">
+  <Link
+    href="/auth/signin"
+    onClick={() =>
+      setOpen(false)
+    }
+    className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+  >
+    Login
+  </Link>
+
+  <Link
+    href="/auth/signup"
+    onClick={() =>
+      setOpen(false)
+    }
+    className="flex items-center justify-center rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
+  >
+    Start Free
+  </Link>
+
+  {/* Divider */}
+  <div className="my-2 border-t border-white/10" />
+
+  {/* Logout */}
+  <button
+    onClick={async () => {
+      await fetch("/auth/logout", {
+        method: "POST",
+      });
+
+      window.location.href = "/";
+    }}
+    className="flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
+  >
+    Logout
+  </button>
+</div>
+</div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

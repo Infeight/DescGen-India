@@ -86,19 +86,19 @@ export default function PricingPreview() {
   return (
     <section
       id="pricing"
-      className="relative py-24"
+      className="relative overflow-hidden py-16 sm:py-24"
     >
       {/* Glow */}
-      <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fuchsia-500/10 blur-3xl" />
+      <div className="absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fuchsia-500/10 blur-3xl sm:h-[500px] sm:w-[500px]" />
 
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         {/* Heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-4xl font-bold text-white md:text-5xl">
+          <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
             Simple pricing for every seller
           </h2>
 
-          <p className="mt-6 text-lg leading-8 text-gray-400">
+          <p className="mt-5 text-base leading-7 text-gray-400 sm:mt-6 sm:text-lg sm:leading-8">
             Flexible credit-based pricing
             designed for Indian
             e-commerce workflows.
@@ -106,11 +106,11 @@ export default function PricingPreview() {
         </div>
 
         {/* Pricing Grid */}
-        <div className="mt-20 grid gap-6 lg:grid-cols-4">
+        <div className="mt-12 grid gap-5 sm:mt-16 lg:mt-20 lg:grid-cols-4">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-3xl border p-8 transition duration-300 hover:-translate-y-1 ${
+              className={`relative flex flex-col rounded-3xl border p-5 transition duration-300 hover:-translate-y-1 sm:p-8 ${
                 plan.highlight
                   ? "border-fuchsia-500/40 bg-gradient-to-b from-fuchsia-500/10 to-cyan-500/10"
                   : "border-white/10 bg-white/5"
@@ -118,7 +118,7 @@ export default function PricingPreview() {
             >
               {/* Popular Badge */}
               {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-4 py-1 text-xs font-semibold text-white">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-4 py-1 text-[10px] font-semibold tracking-wide text-white sm:-top-4 sm:text-xs">
                   MOST POPULAR
                 </div>
               )}
@@ -129,40 +129,40 @@ export default function PricingPreview() {
               </h3>
 
               {/* Description */}
-              <p className="mt-3 text-sm leading-7 text-gray-400">
+              <p className="mt-3 text-sm leading-6 text-gray-400 sm:leading-7">
                 {plan.description}
               </p>
 
               {/* Price */}
-              <div className="mt-8">
-                <span className="text-5xl font-bold text-white">
+              <div className="mt-6 sm:mt-8">
+                <span className="text-4xl font-bold text-white sm:text-5xl">
                   {plan.price}
                 </span>
 
                 {plan.price !==
                   "Custom" && (
-                  <span className="ml-2 text-gray-400">
+                  <span className="ml-2 text-sm text-gray-400 sm:text-base">
                     /month
                   </span>
                 )}
               </div>
 
               {/* Credits */}
-              <p className="mt-4 text-sm font-medium text-fuchsia-300">
+              <p className="mt-3 text-sm font-medium text-fuchsia-300 sm:mt-4">
                 {plan.credits}
               </p>
 
               {/* Features */}
-              <div className="mt-8 flex flex-col gap-4">
+              <div className="mt-6 flex flex-1 flex-col gap-4 sm:mt-8">
                 {plan.features.map(
                   (feature) => (
                     <div
                       key={feature}
                       className="flex items-start gap-3"
                     >
-                      <div className="mt-1 h-2 w-2 rounded-full bg-fuchsia-400" />
+                      <div className="mt-2 h-2 w-2 shrink-0 rounded-full bg-fuchsia-400" />
 
-                      <p className="text-sm text-gray-300">
+                      <p className="text-sm leading-6 text-gray-300">
                         {feature}
                       </p>
                     </div>
@@ -173,7 +173,7 @@ export default function PricingPreview() {
               {/* CTA */}
               <Link
                 href="/signup"
-                className={`mt-10 flex items-center justify-center rounded-2xl px-5 py-4 text-sm font-semibold transition ${
+                className={`mt-8 flex items-center justify-center rounded-2xl px-5 py-4 text-sm font-semibold transition sm:mt-10 ${
                   plan.highlight
                     ? "bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-white hover:scale-[1.02]"
                     : "border border-white/10 bg-white/5 text-white hover:bg-white/10"

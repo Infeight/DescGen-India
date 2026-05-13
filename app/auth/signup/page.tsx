@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import { toast } from "sonner";
+
 import {
   Sparkles,
   ArrowRight,
@@ -28,100 +30,113 @@ export default function SignupPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const [message, setMessage] =
-    useState("");
+  
 
-  const [success, setSuccess] =
-    useState(false);
+ async function handleSignup(
+  e: React.FormEvent
+) {
+  e.preventDefault();
 
-  async function handleSignup(
-    e: React.FormEvent
+  const toastId =
+    toast.loading(
+      "Creating account..."
+    );
+
+  setLoading(true);
+
+  // Validation
+  if (
+    !email ||
+    !password
   ) {
-    e.preventDefault();
-
-    setLoading(true);
-
-    setMessage("");
-
-    setSuccess(false);
-
-    // Validation
-    if (
-      !email ||
-      !password
-    ) {
-      setMessage(
-        "Email and password are required."
-      );
-
-      setLoading(false);
-
-      return;
-    }
-
-    if (
-      password.length <
-      6
-    ) {
-      setMessage(
-        "Password must be at least 6 characters."
-      );
-
-      setLoading(false);
-
-      return;
-    }
-
-    try {
-      const {
-        data,
-        error,
-      } =
-        await supabase.auth.signUp(
-          {
-            email,
-            password,
-          }
-        );
-
-      if (error) {
-        setMessage(
-          error.message
-        );
-
-        return;
+    toast.error(
+      "Email and password are required.",
+      {
+        id: toastId,
       }
+    );
 
-      // Email confirmation OFF
-      if (
-        data.session
-      ) {
-        router.push(
-          "/dashboard/generate"
-        );
+    setLoading(false);
 
-      } else {
-        // Email confirmation ON
-        setSuccess(true);
-
-        setMessage(
-          "Account created successfully! Please check your email to confirm your account before logging in."
-        );
-      }
-
-    } catch (err) {
-      console.error(
-        err
-      );
-
-      setMessage(
-        "Something went wrong. Please try again."
-      );
-
-    } finally {
-      setLoading(false);
-    }
+    return;
   }
+
+  if (
+    password.length <
+    6
+  ) {
+    toast.error(
+      "Password must be at least 6 characters.",
+      {
+        id: toastId,
+      }
+    );
+
+    setLoading(false);
+
+    return;
+  }
+
+  try {
+    const {
+      data,
+      error,
+    } =
+      await supabase.auth.signUp(
+        {
+          email,
+          password,
+        }
+      );
+
+    if (error) {
+      toast.error(
+        error.message,
+        {
+          id: toastId,
+        }
+      );
+
+      return;
+    }
+
+    if (
+      data.session
+    ) {
+      toast.success(
+        "Account created successfully!",
+        {
+          id: toastId,
+        }
+      );
+
+      router.push(
+        "/dashboard/generate"
+      );
+
+    } else {
+      toast.success(
+        "Account created! Please check your email to confirm your account.",
+        {
+          id: toastId,
+        }
+      );
+    }
+
+  } catch (err) {
+    console.error(err);
+
+    toast.error(
+      "Something went wrong. Please try again.",
+      {
+        id: toastId,
+      }
+    );
+
+  } finally {
+    setLoading(false);
+  }
+}
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-black">
@@ -241,26 +256,7 @@ export default function SignupPage() {
             </p>
           </div>
 
-          {/* Alerts */}
-          {message && (
-            <div
-              className={`mb-5 rounded-2xl px-4 py-3 text-sm ${
-                success
-                  ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
-                  : "border border-red-500/20 bg-red-500/10 text-red-300"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                {success && (
-                  <CheckCircle2 className="mt-0.5 h-4 w-4" />
-                )}
-
-                <span>
-                  {message}
-                </span>
-              </div>
-            </div>
-          )}
+          
 
           {/* Email */}
           <div className="mb-5">

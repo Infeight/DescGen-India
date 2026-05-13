@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Papa from "papaparse";
+import { toast } from "sonner";
 
 import {
   Upload,
@@ -60,7 +61,7 @@ function sleep(ms: number) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Process batches
+// Process Batch
 // ─────────────────────────────────────────────────────────────
 async function processBatch(
   rows: CSVRow[],
@@ -117,22 +118,7 @@ async function processBatch(
                   },
 
                   body: JSON.stringify(
-                    {
-                      productName:
-                        row.productName,
-
-                      features:
-                        row.features,
-
-                      platform:
-                        row.platform,
-
-                      tone:
-                        row.tone,
-
-                      language:
-                        row.language,
-                    }
+                    row
                   ),
                 }
               );
@@ -234,6 +220,10 @@ function CopyButton({
 
     setCopied(true);
 
+    toast.success(
+      "Copied to clipboard"
+    );
+
     setTimeout(
       () =>
         setCopied(false),
@@ -291,12 +281,12 @@ function ResultCard({
     "failed";
 
   return (
-    <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+   <div className="w-full max-w-full min-w-0 overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl sm:p-5">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-4">
           <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
               isPending
                 ? "bg-yellow-500/10"
                 : isFailed
@@ -313,8 +303,8 @@ function ResultCard({
             )}
           </div>
 
-          <div>
-            <h3 className="font-semibold text-white">
+          <div className="min-w-0">
+            <h3 className="break-words text-sm font-semibold text-white sm:text-base">
               {
                 item.productName
               }
@@ -328,7 +318,7 @@ function ResultCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {(item.status ===
             "success" ||
             item.status ===
@@ -381,7 +371,7 @@ function ResultCard({
 
       {/* Pending */}
       {isPending && (
-        <div className="mt-5 space-y-3 animate-pulse">
+        <div className="mt-5 animate-pulse space-y-3">
           <div className="h-4 rounded bg-white/10" />
 
           <div className="h-4 w-5/6 rounded bg-white/10" />
@@ -406,7 +396,7 @@ function ResultCard({
                 key={vk}
                 className="rounded-2xl border border-white/10 bg-black/20 p-4"
               >
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm font-medium text-white">
                       {
@@ -423,7 +413,7 @@ function ResultCard({
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={() =>
                         onRegenerate(
@@ -455,7 +445,7 @@ function ResultCard({
                   </div>
                 </div>
 
-                <p className="whitespace-pre-wrap text-sm leading-7 text-gray-300">
+                <p className="break-words whitespace-pre-wrap text-sm leading-7 text-gray-300">
                   {item[vk]}
                 </p>
               </div>
@@ -485,9 +475,6 @@ export default function BulkPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const [error, setError] =
-    useState("");
-
   const [
     progress,
     setProgress,
@@ -511,8 +498,10 @@ export default function BulkPage() {
 
     if (!file) return;
 
-    setError("");
+    toast.dismiss();
+
     setResults([]);
+
     setProgress(0);
 
     Papa.parse<CSVRow>(
@@ -554,10 +543,8 @@ export default function BulkPage() {
             missing.length >
             0
           ) {
-            setError(
-              `CSV missing columns: ${missing.join(
-                ", "
-              )}`
+            toast.error(
+              `CSV missing columns: ${missing.join(", ")}`
             );
 
             return;
@@ -566,10 +553,14 @@ export default function BulkPage() {
           setRows(
             res.data
           );
+
+          toast.success(
+            `${res.data.length} products loaded successfully`
+          );
         },
 
         error: () =>
-          setError(
+          toast.error(
             "Failed to parse CSV."
           ),
       }
@@ -580,11 +571,14 @@ export default function BulkPage() {
     if (rows.length === 0)
       return;
 
+    const toastId =
+      toast.loading(
+        "Starting AI bulk generation..."
+      );
+
     setLoading(true);
 
     setProgress(0);
-
-    setError("");
 
     abortRef.current =
       false;
@@ -633,12 +627,24 @@ export default function BulkPage() {
     );
 
     setLoading(false);
+
+    toast.success(
+      "Bulk generation completed",
+      {
+        id: toastId,
+      }
+    );
   }
 
   async function handleRegenerate(
     rowIndex: number,
     variant?: VariantKey
   ) {
+    const toastId =
+      toast.loading(
+        "Regenerating descriptions..."
+      );
+
     const row =
       rows[rowIndex];
 
@@ -696,9 +702,12 @@ export default function BulkPage() {
         await res.json();
 
       if (!res.ok) {
-        setError(
+        toast.error(
           data.error ||
-            "Regeneration failed."
+            "Regeneration failed.",
+          {
+            id: toastId,
+          }
         );
 
         return;
@@ -743,9 +752,19 @@ export default function BulkPage() {
         return next;
       });
 
+      toast.success(
+        "Descriptions regenerated successfully",
+        {
+          id: toastId,
+        }
+      );
+
     } catch {
-      setError(
-        "Regeneration failed."
+      toast.error(
+        "Regeneration failed.",
+        {
+          id: toastId,
+        }
       );
 
     } finally {
@@ -823,6 +842,10 @@ export default function BulkPage() {
 
     a.click();
 
+    toast.success(
+      "CSV downloaded successfully"
+    );
+
     URL.revokeObjectURL(
       url
     );
@@ -843,295 +866,290 @@ export default function BulkPage() {
     ).length;
 
   return (
-    <div className="relative flex flex-col gap-8">
-      {/* Glow */}
-      <div className="absolute left-1/2 top-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl" />
+    <div className="relative w-full max-w-full overflow-x-hidden">
+      <div className="flex w-full max-w-full min-w-0 flex-col gap-6 overflow-x-hidden pb-6 sm:gap-8">
+        {/* Glow */}
+        <div className="absolute left-1/2 top-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl" />
 
-      {/* Header */}
-      <div className="relative flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 shadow-lg shadow-cyan-500/20">
-          <FileSpreadsheet className="h-7 w-7 text-white" />
-        </div>
-
-        <div>
-          <h1 className="text-4xl font-bold text-white">
-            Bulk AI Generator
-          </h1>
-
-          <p className="mt-1 text-gray-400">
-            Generate descriptions
-            for hundreds of
-            products with AI.
-          </p>
-        </div>
-      </div>
-
-      {/* Error */}
-      {error && (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-300">
-          {error}
-        </div>
-      )}
-
-      {/* Upload */}
-      <div className="rounded-[32px] border border-dashed border-white/10 bg-white/5 p-10 text-center backdrop-blur-xl">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500/10 to-fuchsia-500/10">
-          <Upload className="h-10 w-10 text-cyan-400" />
-        </div>
-
-        <h2 className="mt-6 text-2xl font-semibold text-white">
-          Upload Product CSV
-        </h2>
-
-        <p className="mx-auto mt-3 max-w-xl text-gray-400">
-          Upload a CSV file to
-          generate marketplace
-          descriptions in parallel
-          AI batches.
-        </p>
-
-        <div className="mt-6">
-          <input
-            type="file"
-            accept=".csv"
-            onChange={
-              handleFileUpload
-            }
-            className="mx-auto block text-sm text-gray-400
-            file:mr-4
-            file:rounded-2xl
-            file:border-0
-            file:bg-gradient-to-r
-            file:from-fuchsia-500
-            file:to-cyan-500
-            file:px-5
-            file:py-3
-            file:text-sm
-            file:font-semibold
-            file:text-white
-            hover:file:opacity-90"
-          />
-        </div>
-
-        <p className="mt-5 text-xs text-gray-500">
-          Required columns:
-          productName,
-          features, platform,
-          tone, language
-        </p>
-
-        <a
-          href="data:text/csv;charset=utf-8,productName,features,platform,tone,language%0AWomen Cotton Kurti,Soft cotton floral print summer wear,Meesho,Friendly,English"
-          download="sample_bulk.csv"
-          className="mt-3 inline-flex items-center gap-2 text-sm text-cyan-400 transition hover:text-cyan-300"
-        >
-          <Download className="h-4 w-4" />
-
-          Download sample CSV
-        </a>
-      </div>
-
-      {/* Preview */}
-      {rows.length > 0 && (
-        <div className="rounded-[32px] border border-white/10 bg-white/5 p-7 backdrop-blur-xl">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold text-white">
-                Product Preview
-              </h2>
-
-              <p className="mt-1 text-sm text-gray-400">
-                {rows.length}{" "}
-                products ready
-                for AI generation
-              </p>
-            </div>
-
-            <button
-              onClick={
-                handleGenerate
-              }
-              disabled={
-                loading
-              }
-              className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-6 py-4 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:scale-[1.01] disabled:opacity-50"
-            >
-              <Sparkles className="h-5 w-5" />
-
-              {loading
-                ? `Generating ${progress}/${rows.length}`
-                : `Generate All`}
-            </button>
+        {/* Header */}
+        <div className="relative flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 shadow-lg shadow-cyan-500/20 sm:h-16 sm:w-16">
+            <FileSpreadsheet className="h-7 w-7 text-white" />
           </div>
 
-          {/* Progress */}
-          {loading && (
-            <div className="mb-6">
-              <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 transition-all duration-300"
-                  style={{
-                    width: `${(progress / rows.length) * 100}%`,
-                  }}
-                />
+          <div className="min-w-0">
+            <h1 className="text-3xl font-bold text-white sm:text-4xl">
+              Bulk AI Generator
+            </h1>
+
+            <p className="mt-1 text-gray-400">
+              Generate descriptions
+              for hundreds of
+              products with AI.
+            </p>
+          </div>
+        </div>
+
+        {/* Upload */}
+        <div className="w-full min-w-0 rounded-[32px] border border-dashed border-white/10 bg-white/5 p-5 text-center backdrop-blur-xl sm:p-10">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500/10 to-fuchsia-500/10">
+            <Upload className="h-10 w-10 text-cyan-400" />
+          </div>
+
+          <h2 className="mt-6 text-xl font-semibold text-white sm:text-2xl">
+            Upload Product CSV
+          </h2>
+
+          <p className="mx-auto mt-3 max-w-xl text-gray-400">
+            Upload a CSV file to
+            generate marketplace
+            descriptions in parallel
+            AI batches.
+          </p>
+
+          <div className="mt-6 overflow-hidden">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={
+                handleFileUpload
+              }
+              className="block w-full text-sm text-gray-400
+              file:mr-4
+              file:rounded-2xl
+              file:border-0
+              file:bg-gradient-to-r
+              file:from-fuchsia-500
+              file:to-cyan-500
+              file:px-5
+              file:py-3
+              file:text-sm
+              file:font-semibold
+              file:text-white
+              hover:file:opacity-90"
+            />
+          </div>
+
+          <p className="mt-5 break-words text-xs text-gray-500">
+            Required columns:
+            productName,
+            features, platform,
+            tone, language
+          </p>
+
+          <a
+            href="data:text/csv;charset=utf-8,productName,features,platform,tone,language%0AWomen Cotton Kurti,Soft cotton floral print summer wear,Meesho,Friendly,English"
+            download="sample_bulk.csv"
+            className="mt-3 inline-flex flex-wrap items-center justify-center gap-2 text-center text-sm text-cyan-400 transition hover:text-cyan-300"
+          >
+            <Download className="h-4 w-4" />
+
+            Download sample CSV
+          </a>
+        </div>
+
+        {/* Preview */}
+        {rows.length > 0 && (
+          <div className="w-full min-w-0 rounded-[32px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl sm:p-7">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-white">
+                  Product Preview
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-400">
+                  {rows.length}{" "}
+                  products ready
+                  for AI generation
+                </p>
               </div>
 
-              <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
-                <span>
-                  AI processing
-                  products...
-                </span>
+              <button
+                onClick={
+                  handleGenerate
+                }
+                disabled={
+                  loading
+                }
+                className="flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-6 py-4 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:scale-[1.01] disabled:opacity-50 sm:w-auto"
+              >
+                <Sparkles className="h-5 w-5" />
 
-                <span>
-                  {progress}/
-                  {
-                    rows.length
-                  }
-                </span>
-              </div>
+                {loading
+                  ? `Generating ${progress}/${rows.length}`
+                  : `Generate All`}
+              </button>
             </div>
-          )}
 
-          {/* Table */}
-          <div className="overflow-hidden rounded-3xl border border-white/10">
-            <table className="min-w-full">
-              <thead className="bg-white/5">
-                <tr>
-                  {[
-                    "Product",
-                    "Platform",
-                    "Tone",
-                    "Language",
-                  ].map(
+            {/* Progress */}
+            {loading && (
+              <div className="mb-6">
+                <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 transition-all duration-300"
+                    style={{
+                      width: `${(progress / rows.length) * 100}%`,
+                    }}
+                  />
+                </div>
+
+                <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+                  <span>
+                    AI processing
+                    products...
+                  </span>
+
+                  <span>
+                    {progress}/
+                    {
+                      rows.length
+                    }
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Table */}
+           <div className="w-full max-w-full overflow-x-auto rounded-3xl border border-white/10">
+              <table className="w-full table-fixed">
+                <thead className="bg-white/5">
+                  <tr>
+                    {[
+                      "Product",
+                      "Platform",
+                      "Tone",
+                      "Language",
+                    ].map(
+                      (
+                        heading
+                      ) => (
+                        <th
+                          key={
+                            heading
+                          }
+                          className="px-5 py-4 text-left text-sm font-medium text-gray-400"
+                        >
+                          {
+                            heading
+                          }
+                        </th>
+                      )
+                    )}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {rows.map(
                     (
-                      heading
+                      row,
+                      i
                     ) => (
-                      <th
-                        key={
-                          heading
-                        }
-                        className="px-5 py-4 text-left text-sm font-medium text-gray-400"
+                      <tr
+                        key={i}
+                        className="border-t border-white/5"
                       >
-                        {
-                          heading
-                        }
-                      </th>
+                        <td className="max-w-[120px] truncate px-5 py-4 text-sm text-white">
+                          {
+                            row.productName
+                          }
+                        </td>
+
+                        <td className="max-w-[120px] truncate px-5 py-4 text-sm text-gray-300">
+                          {
+                            row.platform
+                          }
+                        </td>
+
+                        <td className="max-w-[120px] truncate px-5 py-4 text-sm text-gray-300">
+                          {
+                            row.tone
+                          }
+                        </td>
+
+                        <td className="max-w-[120px] truncate px-5 py-4 text-sm text-gray-300">
+                          {
+                            row.language
+                          }
+                        </td>
+                      </tr>
                     )
                   )}
-                </tr>
-              </thead>
-
-              <tbody>
-                {rows.map(
-                  (
-                    row,
-                    i
-                  ) => (
-                    <tr
-                      key={i}
-                      className="border-t border-white/5"
-                    >
-                      <td className="px-5 py-4 text-sm text-white">
-                        {
-                          row.productName
-                        }
-                      </td>
-
-                      <td className="px-5 py-4 text-sm text-gray-300">
-                        {
-                          row.platform
-                        }
-                      </td>
-
-                      <td className="px-5 py-4 text-sm text-gray-300">
-                        {
-                          row.tone
-                        }
-                      </td>
-
-                      <td className="px-5 py-4 text-sm text-gray-300">
-                        {
-                          row.language
-                        }
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Results */}
-      {results.length >
-        0 && (
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-semibold text-white">
-                AI Results
-              </h2>
+        {/* Results */}
+        {results.length >
+          0 && (
+          <div className="flex w-full max-w-full min-w-0 flex-col gap-5 overflow-x-hidden">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="text-2xl font-semibold text-white">
+                  AI Results
+                </h2>
+
+                {successCount >
+                  0 && (
+                  <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+                    {
+                      successCount
+                    }{" "}
+                    completed
+                  </div>
+                )}
+
+                {failCount >
+                  0 && (
+                  <div className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
+                    {
+                      failCount
+                    }{" "}
+                    failed
+                  </div>
+                )}
+              </div>
 
               {successCount >
-                0 && (
-                <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                  {
-                    successCount
-                  }{" "}
-                  completed
-                </div>
-              )}
+                0 &&
+                !loading && (
+                  <button
+                    onClick={
+                      downloadCSV
+                    }
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-gray-300 transition hover:bg-white/10 sm:w-auto"
+                  >
+                    <Download className="h-4 w-4" />
 
-              {failCount >
-                0 && (
-                <div className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300">
-                  {
-                    failCount
-                  }{" "}
-                  failed
-                </div>
-              )}
+                    Download CSV
+                  </button>
+                )}
             </div>
 
-            {successCount >
-              0 &&
-              !loading && (
-                <button
-                  onClick={
-                    downloadCSV
-                  }
-                  className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-gray-300 transition hover:bg-white/10"
-                >
-                  <Download className="h-4 w-4" />
-
-                  Download CSV
-                </button>
+           <div className="flex w-full max-w-full min-w-0 flex-col gap-4 overflow-x-hidden">
+              {results.map(
+                (
+                  item,
+                  i
+                ) => (
+                  <ResultCard
+                    key={i}
+                    item={item}
+                    index={i}
+                    onRegenerate={
+                      handleRegenerate
+                    }
+                    regenerating={
+                      regenerating
+                    }
+                  />
+                )
               )}
+            </div>
           </div>
-
-          <div className="flex flex-col gap-4">
-            {results.map(
-              (
-                item,
-                i
-              ) => (
-                <ResultCard
-                  key={i}
-                  item={item}
-                  index={i}
-                  onRegenerate={
-                    handleRegenerate
-                  }
-                  regenerating={
-                    regenerating
-                  }
-                />
-              )
-            )}
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

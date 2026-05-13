@@ -10,14 +10,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 
-import { ratelimit } from "@/lib/ratelimit";
-
 import {
   Sparkles,
   Copy,
   RefreshCw,
   Wand2,
 } from "lucide-react";
+
+import { toast } from "sonner";
 
 const formSchema = z.object({
   productName: z
@@ -80,6 +80,76 @@ const VARIANT_LABELS: Record<
   v3: "Punchy",
 };
 
+const STARTER_PRODUCTS = [
+  {
+    name:
+      "Women Cotton Kurti",
+
+    features:
+      "Soft breathable cotton, floral print, lightweight summer wear, comfortable fit",
+
+    platform:
+      "Meesho",
+
+    tone:
+      "Friendly",
+
+    language:
+      "English",
+  },
+
+  {
+    name:
+      "Wireless Earbuds",
+
+    features:
+      "Bluetooth 5.3, deep bass, fast charging, noise cancellation, gaming mode",
+
+    platform:
+      "Amazon",
+
+    tone:
+      "Professional",
+
+    language:
+      "English",
+  },
+
+  {
+    name:
+      "Steel Water Bottle",
+
+    features:
+      "Leak-proof, insulated stainless steel, 1 litre capacity, durable body",
+
+    platform:
+      "Flipkart",
+
+    tone:
+      "Professional",
+
+    language:
+      "English",
+  },
+
+  {
+    name:
+      "Ayurvedic Hair Oil",
+
+    features:
+      "Natural herbs, reduces hair fall, improves scalp health, non-sticky formula",
+
+    platform:
+      "Instagram",
+
+    tone:
+      "Emotional",
+
+    language:
+      "English",
+  },
+];
+
 export default function GeneratePage() {
   const [loading, setLoading] =
     useState(false);
@@ -90,12 +160,6 @@ export default function GeneratePage() {
     );
 
   const [copied, setCopied] =
-    useState("");
-
-  const [error, setError] =
-    useState("");
-
-  const [success, setSuccess] =
     useState("");
 
   const [
@@ -115,6 +179,7 @@ export default function GeneratePage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver:
@@ -126,14 +191,15 @@ export default function GeneratePage() {
   async function onSubmit(
     data: FormData
   ) {
+    const toastId =
+      toast.loading(
+        "Generating AI descriptions..."
+      );
+
     try {
       setLoading(true);
 
       setResult(null);
-
-      setError("");
-
-      setSuccess("");
 
       setLastFormData(data);
 
@@ -164,16 +230,26 @@ export default function GeneratePage() {
           json.code ===
             "NO_CREDITS"
         ) {
-          setError(
-            "No credits remaining. Upgrade required."
+          toast.error(
+            "No credits remaining. Upgrade required.",
+            {
+              id: toastId,
+            }
+          );
+
+          router.push(
+            "/pricing"
           );
 
           return;
         }
 
-        setError(
+        toast.error(
           json.error ||
-            "Something went wrong"
+            "Something went wrong",
+          {
+            id: toastId,
+          }
         );
 
         return;
@@ -181,8 +257,11 @@ export default function GeneratePage() {
 
       setResult(json);
 
-      setSuccess(
-        "Descriptions generated successfully."
+      toast.success(
+        "Descriptions generated successfully.",
+        {
+          id: toastId,
+        }
       );
 
       router.refresh();
@@ -190,8 +269,11 @@ export default function GeneratePage() {
     } catch (err) {
       console.error(err);
 
-      setError(
-        "Generation failed. Please try again."
+      toast.error(
+        "Generation failed. Please try again.",
+        {
+          id: toastId,
+        }
       );
 
     } finally {
@@ -204,9 +286,12 @@ export default function GeneratePage() {
   ) {
     if (!lastFormData) return;
 
-    setRegenerating(variant);
+    const toastId =
+      toast.loading(
+        "Regenerating variant..."
+      );
 
-    setError("");
+    setRegenerating(variant);
 
     try {
       const response =
@@ -239,16 +324,26 @@ export default function GeneratePage() {
           json.code ===
             "NO_CREDITS"
         ) {
-          setError(
-            "No credits remaining. Upgrade required."
+          toast.error(
+            "No credits remaining. Upgrade required.",
+            {
+              id: toastId,
+            }
+          );
+
+          router.push(
+            "/pricing"
           );
 
           return;
         }
 
-        setError(
+        toast.error(
           json.error ||
-            "Regeneration failed."
+            "Regeneration failed.",
+          {
+            id: toastId,
+          }
         );
 
         return;
@@ -264,13 +359,23 @@ export default function GeneratePage() {
         };
       });
 
+      toast.success(
+        "Variant regenerated",
+        {
+          id: toastId,
+        }
+      );
+
       router.refresh();
 
     } catch (err) {
       console.error(err);
 
-      setError(
-        "Regeneration failed. Please try again."
+      toast.error(
+        "Regeneration failed. Please try again.",
+        {
+          id: toastId,
+        }
       );
 
     } finally {
@@ -289,6 +394,10 @@ export default function GeneratePage() {
 
       setCopied(key);
 
+      toast.success(
+        "Copied to clipboard"
+      );
+
       setTimeout(
         () => setCopied(""),
         2000
@@ -296,7 +405,44 @@ export default function GeneratePage() {
 
     } catch (err) {
       console.error(err);
+
+      toast.error(
+        "Failed to copy"
+      );
     }
+  }
+
+  function applyStarter(
+    starter: (typeof STARTER_PRODUCTS)[0]
+  ) {
+    setValue(
+      "productName",
+      starter.name
+    );
+
+    setValue(
+      "features",
+      starter.features
+    );
+
+    setValue(
+      "platform",
+      starter.platform
+    );
+
+    setValue(
+      "tone",
+      starter.tone
+    );
+
+    setValue(
+      "language",
+      starter.language
+    );
+
+    toast.success(
+      "Starter template applied"
+    );
   }
 
   function VariantCard({
@@ -422,19 +568,6 @@ export default function GeneratePage() {
           </div>
         </div>
       </div>
-
-      {/* Alerts */}
-      {error && (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-300">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-300">
-          {success}
-        </div>
-      )}
 
       {/* Workspace */}
       <div className="grid gap-8 xl:grid-cols-[420px_1fr]">
@@ -638,6 +771,28 @@ export default function GeneratePage() {
                   optimized descriptions
                   for Indian marketplaces.
                 </p>
+
+                <div className="mt-8 flex flex-wrap justify-center gap-3">
+                  {STARTER_PRODUCTS.map(
+                    (item) => (
+                      <button
+                        key={
+                          item.name
+                        }
+                        onClick={() =>
+                          applyStarter(
+                            item
+                          )
+                        }
+                        className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10 hover:text-white"
+                      >
+                        {
+                          item.name
+                        }
+                      </button>
+                    )
+                  )}
+                </div>
               </div>
             )}
 

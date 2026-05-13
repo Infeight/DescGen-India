@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 const supabase =
   createClient();
@@ -103,6 +104,10 @@ export default function HistoryPage() {
           error
         );
 
+        toast.error(
+  "Failed to load history"
+);
+
         return;
       }
 
@@ -114,6 +119,10 @@ export default function HistoryPage() {
       console.error(
         error
       );
+
+      toast.error(
+  "Something went wrong"
+);
 
     } finally {
       setLoading(false);
@@ -134,6 +143,9 @@ export default function HistoryPage() {
       );
 
       setCopied(key);
+      toast.success(
+  "Copied to clipboard"
+);
 
       setTimeout(
         () =>

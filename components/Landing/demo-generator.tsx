@@ -101,39 +101,39 @@ export default function DemoGenerator() {
   return (
     <section
       id="demo"
-      className="relative overflow-hidden py-24"
+      className="relative overflow-hidden py-16 sm:py-24"
     >
       {/* Glow */}
-      <div className="absolute left-1/2 top-0 h-[350px] w-[350px] -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
+      <div className="absolute left-1/2 top-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl sm:h-[350px] sm:w-[350px]" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-6">
+      <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:gap-10 sm:px-6">
         {/* Heading */}
         <div className="text-center">
-          <h2 className="text-4xl font-bold text-white md:text-5xl">
+          <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
             Experience the AI Generator
           </h2>
 
-          <p className="mt-5 text-lg text-gray-400">
+          <p className="mt-4 text-base leading-7 text-gray-400 sm:mt-5 sm:text-lg">
             Marketplace-aware AI descriptions
             optimized for Indian sellers.
           </p>
         </div>
 
         {/* Main Card */}
-        <div className="rounded-[32px] border border-white/10 bg-white/5 p-8 backdrop-blur-2xl">
+        <div className="rounded-[32px] border border-white/10 bg-white/5 p-4 backdrop-blur-2xl sm:p-8">
           {/* Product Showcase */}
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Product Info */}
-            <div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+            <div className="rounded-3xl border border-white/10 bg-black/30 p-4 sm:p-6">
               <p className="text-sm text-gray-500">
                 Demo Product
               </p>
 
-              <h3 className="mt-3 text-3xl font-bold text-white">
+              <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
                 Women Floral Kurti
               </h3>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap gap-3">
                 {[
                   "Soft Cotton",
                   "Floral Print",
@@ -142,7 +142,7 @@ export default function DemoGenerator() {
                 ].map((feature) => (
                   <div
                     key={feature}
-                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300"
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300 sm:px-4 sm:text-sm"
                   >
                     {feature}
                   </div>
@@ -150,7 +150,7 @@ export default function DemoGenerator() {
               </div>
 
               {/* Platform Selector */}
-              <div className="mt-10">
+              <div className="mt-8 sm:mt-10">
                 <p className="mb-4 text-sm text-gray-500">
                   Select Platform
                 </p>
@@ -162,7 +162,7 @@ export default function DemoGenerator() {
                       onClick={() =>
                         setPlatform(item)
                       }
-                      className={`rounded-2xl px-5 py-3 text-sm font-medium transition-all ${
+                      className={`rounded-2xl px-4 py-3 text-sm font-medium transition-all sm:px-5 ${
                         platform === item
                           ? "bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-white shadow-lg shadow-fuchsia-500/20"
                           : "border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
@@ -175,13 +175,13 @@ export default function DemoGenerator() {
               </div>
 
               {/* Button */}
-              <div className="mt-10">
+              <div className="mt-8 sm:mt-10">
                 <button
                   onClick={
                     handleGenerate
                   }
                   disabled={loading}
-                  className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-8 py-4 font-semibold text-white transition hover:scale-[1.01] disabled:opacity-50"
+                  className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-6 py-4 font-semibold text-white transition hover:scale-[1.01] disabled:opacity-50 sm:px-8"
                 >
                   {loading
                     ? "Generating AI Outputs..."
@@ -191,8 +191,8 @@ export default function DemoGenerator() {
             </div>
 
             {/* Preview Panel */}
-            <div className="rounded-3xl border border-white/10 bg-black/30 p-6">
-              <div className="flex items-center justify-between">
+            <div className="rounded-3xl border border-white/10 bg-black/30 p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm text-gray-500">
                     AI Output Preview
@@ -203,7 +203,7 @@ export default function DemoGenerator() {
                   </h3>
                 </div>
 
-                <div className="rounded-full border border-fuchsia-500/20 bg-fuchsia-500/10 px-4 py-2 text-sm text-fuchsia-300">
+                <div className="w-fit rounded-full border border-fuchsia-500/20 bg-fuchsia-500/10 px-4 py-2 text-sm text-fuchsia-300">
                   AI Optimized
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function DemoGenerator() {
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="h-28 animate-pulse rounded-2xl bg-white/5"
+                      className="h-24 animate-pulse rounded-2xl bg-white/5 sm:h-28"
                     />
                   ))}
                 </div>
@@ -246,13 +246,13 @@ export default function DemoGenerator() {
                     transition={{
                       delay: 0.1,
                     }}
-                    className="rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-5"
+                    className="rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/5 p-4 sm:p-5"
                   >
                     <p className="mb-3 text-sm font-semibold text-fuchsia-400">
                       Emotional Style
                     </p>
 
-                    <p className="text-sm leading-7 text-gray-300">
+                    <p className="break-words text-sm leading-7 text-gray-300">
                       {
                         currentOutput.v1
                       }
@@ -272,13 +272,13 @@ export default function DemoGenerator() {
                     transition={{
                       delay: 0.2,
                     }}
-                    className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5"
+                    className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4 sm:p-5"
                   >
                     <p className="mb-3 text-sm font-semibold text-cyan-400">
                       Feature Focused
                     </p>
 
-                    <p className="whitespace-pre-line text-sm leading-7 text-gray-300">
+                    <p className="whitespace-pre-line break-words text-sm leading-7 text-gray-300">
                       {
                         currentOutput.v2
                       }
@@ -298,13 +298,13 @@ export default function DemoGenerator() {
                     transition={{
                       delay: 0.3,
                     }}
-                    className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5"
+                    className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:p-5"
                   >
                     <p className="mb-3 text-sm font-semibold text-emerald-400">
                       Short & Punchy
                     </p>
 
-                    <p className="text-sm leading-7 text-gray-300">
+                    <p className="break-words text-sm leading-7 text-gray-300">
                       {
                         currentOutput.v3
                       }
@@ -315,7 +315,7 @@ export default function DemoGenerator() {
 
               {!generated &&
                 !loading && (
-                  <div className="mt-16 flex h-[300px] items-center justify-center rounded-3xl border border-dashed border-white/10 text-center text-gray-500">
+                  <div className="mt-10 flex h-[220px] items-center justify-center rounded-3xl border border-dashed border-white/10 px-6 text-center text-sm text-gray-500 sm:mt-16 sm:h-[300px] sm:text-base">
                     Select a platform and generate
                     AI descriptions.
                   </div>

@@ -15,6 +15,8 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 
+import { toast } from "sonner";
+
 const supabase =
   createClient();
 
@@ -53,11 +55,7 @@ export default function SettingsPage() {
   const [saving, setSaving] =
     useState(false);
 
-  const [success, setSuccess] =
-    useState("");
-
-  const [error, setError] =
-    useState("");
+  
 
   const [brandName, setBrandName] =
     useState("");
@@ -92,7 +90,6 @@ export default function SettingsPage() {
       try {
         setLoading(true);
 
-        setError("");
 
         const {
           data: { user },
@@ -124,9 +121,9 @@ export default function SettingsPage() {
             .single();
 
         if (error) {
-          setError(
-            error.message
-          );
+         toast.error(
+  error.message
+);
 
           return;
         }
@@ -166,9 +163,9 @@ export default function SettingsPage() {
       } catch (err) {
         console.error(err);
 
-        setError(
-          "Failed to load settings."
-        );
+       toast.error(
+  "Failed to load settings."
+);
 
       } finally {
         setLoading(false);
@@ -183,12 +180,15 @@ export default function SettingsPage() {
   ) {
     e.preventDefault();
 
+    const toastId =
+  toast.loading(
+    "Saving brand memory..."
+  );
+
     try {
       setSaving(true);
 
-      setSuccess("");
-
-      setError("");
+    
 
       const {
         data: { user },
@@ -196,9 +196,12 @@ export default function SettingsPage() {
         await supabase.auth.getUser();
 
       if (!user) {
-        setError(
-          "Unauthorized"
-        );
+       toast.error(
+  "Unauthorized",
+  {
+    id: toastId,
+  }
+);
 
         return;
       }
@@ -238,23 +241,31 @@ export default function SettingsPage() {
           );
 
       if (error) {
-        setError(
-          error.message
-        );
-
+      toast.error(
+  error.message,
+  {
+    id: toastId,
+  }
+);
         return;
       }
 
-      setSuccess(
-        "Brand memory updated successfully."
-      );
+    toast.success(
+  "Brand memory updated successfully.",
+  {
+    id: toastId,
+  }
+);
 
     } catch (err) {
       console.error(err);
 
-      setError(
-        "Failed to save settings."
-      );
+      toast.error(
+  "Failed to save settings.",
+  {
+    id: toastId,
+  }
+);
 
     } finally {
       setSaving(false);
@@ -341,19 +352,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Alerts */}
-      {error && (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-4 text-sm text-red-300">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-300">
-          {success}
-        </div>
-      )}
-
+     
       {/* Loading */}
       {loading && (
         <div className="h-52 animate-pulse rounded-[32px] border border-white/10 bg-white/5" />

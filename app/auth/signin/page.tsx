@@ -4,11 +4,15 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import { toast } from "sonner";
+
 import {
   Sparkles,
   ArrowRight,
   Wand2,
 } from "lucide-react";
+
+import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/client";
 
@@ -27,52 +31,64 @@ export default function LoginPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const [error, setError] =
-    useState("");
 
-  async function handleLogin(
-    e: React.FormEvent
-  ) {
-    e.preventDefault();
+async function handleLogin(
+  e: React.FormEvent
+) {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  const toastId =
+    toast.loading(
+      "Logging in..."
+    );
 
-      setError("");
+  try {
+    setLoading(true);
 
-      const { error } =
-        await supabase.auth.signInWithPassword(
-          {
-            email,
-            password,
-          }
-        );
-
-      if (error) {
-        setError(
-          error.message
-        );
-
-        return;
-      }
-
-      router.push(
-        "/dashboard/generate"
+    const { error } =
+      await supabase.auth.signInWithPassword(
+        {
+          email,
+          password,
+        }
       );
 
-    } catch (error) {
-      console.error(
-        error
+    if (error) {
+      toast.error(
+        error.message,
+        {
+          id: toastId,
+        }
       );
 
-      setError(
-        "Something went wrong. Please try again."
-      );
-
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    toast.success(
+      "Welcome back!",
+      {
+        id: toastId,
+      }
+    );
+
+    router.push(
+      "/dashboard/generate"
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    toast.error(
+      "Something went wrong. Please try again.",
+      {
+        id: toastId,
+      }
+    );
+
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-black">
@@ -191,12 +207,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="mb-5 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-              {error}
-            </div>
-          )}
+         
 
           {/* Email */}
           <div className="mb-5">
@@ -236,6 +247,15 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="flex justify-end">
+  <Link
+    href="/auth/forgot-password"
+    className="text-sm text-gray-400 transition hover:text-white"
+  >
+    Forgot password?
+  </Link>
+</div>
+
           {/* Button */}
           <button
             type="submit"
@@ -257,7 +277,7 @@ export default function LoginPage() {
             <span
               onClick={() =>
                 router.push(
-                  "/signup"
+                  "/auth/signup"
                 )
               }
               className="cursor-pointer font-medium text-white transition hover:text-fuchsia-400"
