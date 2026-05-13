@@ -28,6 +28,10 @@ export const metadata: Metadata = {
       "%s — DescGen India",
   },
 
+   verification: {
+    google: "UaelPgLs6Xal66qjtjYhm3x6Z37tomjTEELpjp7WOKo",
+  },
+
   description:
     "Write product listings 10x faster. AI descriptions optimized for Meesho, Amazon India, Flipkart, Myntra & Instagram — in English, Hindi & Telugu. Free to start.",
 
