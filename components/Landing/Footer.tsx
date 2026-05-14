@@ -105,36 +105,38 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Legal */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
-              Legal
-            </h3>
+          
+         {/* Legal */}
+<div>
+  <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+    Legal
+  </h3>
 
-            <div className="mt-5 flex flex-col gap-3 text-sm text-gray-400">
-              <Link
-                href="/privacy"
-                className="transition hover:text-white"
-              >
-                Privacy Policy
-              </Link>
+  <div className="mt-5 flex flex-col gap-3 text-sm text-gray-400">
+    <Link
+      href="/privacy"
+      className="transition hover:text-white"
+    >
+      Privacy Policy
+    </Link>
 
-              <Link
-                href="/terms"
-                className="transition hover:text-white"
-              >
-                Terms of Service
-              </Link>
+    <Link
+      href="/terms"
+      className="transition hover:text-white"
+    >
+      Terms of Service
+    </Link>
 
-              <Link
-                href="/pricing"
-                className="transition hover:text-white"
-              >
-                Refund Policy
-              </Link>
-            </div>
-          </div>
-        </div>
+    <a
+      href="mailto:support@descgen.shop"
+      className="transition hover:text-white"
+    >
+      Support
+    </a>
+  </div>
+</div>
+</div>
+
       </div>
 
       {/* Bottom */}

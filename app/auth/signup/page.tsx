@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import { sendWelcomeEmail } from "@/lib/email";
+
 import { toast } from "sonner";
 
 import {
@@ -109,6 +111,12 @@ export default function SignupPage() {
           id: toastId,
         }
       );
+
+      if (data.user) {
+  sendWelcomeEmail(email).catch(
+    console.error
+  );
+}
 
       router.push(
         "/dashboard/generate"
@@ -315,6 +323,23 @@ export default function SignupPage() {
               <ArrowRight className="h-5 w-5" />
             )}
           </button>
+
+          <p className="text-center text-xs leading-6 text-gray-400">
+  By creating an account you agree to our{" "}
+  <a
+    href="/terms"
+    className="underline hover:text-gray-300"
+  >
+    Terms of Service
+  </a>{" "}
+  and{" "}
+  <a
+    href="/privacy"
+    className="underline hover:text-gray-300"
+  >
+    Privacy Policy
+  </a>
+</p>
 
           {/* Bottom */}
           <p className="mt-6 text-center text-sm text-gray-500">
