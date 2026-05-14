@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { sendWelcomeEmail } from "@/lib/email";
-
 import { toast } from "sonner";
 
 import {
@@ -112,11 +110,22 @@ export default function SignupPage() {
         }
       );
 
-      if (data.user) {
-  sendWelcomeEmail(email).catch(
-    console.error
-  );
-}
+      // resend email system
+      fetch(
+  "/api/send-welcome-email",
+  {
+    method: "POST",
+
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
+
+    body: JSON.stringify({
+      email,
+    }),
+  }
+).catch(console.error);
 
       router.push(
         "/dashboard/generate"

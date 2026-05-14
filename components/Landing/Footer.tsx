@@ -128,7 +128,7 @@ export default function Footer() {
     </Link>
 
     <a
-      href="mailto:support@descgen.shop"
+      href="mailto:vrmtarun7@gmail.com"
       className="transition hover:text-white"
     >
       Support

@@ -136,10 +136,10 @@ export default function PrivacyPage() {
               questions or requests,
               contact us at{" "}
               <a
-                href="mailto:support@descgen.shop"
+                href="mailto:vrmtarun7@gmail.com"
                 className="text-fuchsia-400 hover:underline"
               >
-                support@descgen.shop
+                vrmtarun7@gmail.com
               </a>
             </p>
           </section>
