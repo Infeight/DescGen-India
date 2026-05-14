@@ -9,7 +9,12 @@ export async function POST(
     const body =
       await req.json();
 
+  
+
     const { email } = body;
+
+        console.log("EMAIL API HIT");
+console.log(email);
 
     if (!email) {
       return NextResponse.json(

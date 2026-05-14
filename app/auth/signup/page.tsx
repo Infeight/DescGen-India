@@ -100,38 +100,21 @@ export default function SignupPage() {
       return;
     }
 
-    if (
-      data.session
-    ) {
-      toast.success(
-        "Account created successfully!",
-        {
-          id: toastId,
-        }
-      );
 
-      // resend email system
-      fetch(
-  "/api/send-welcome-email",
-  {
-    method: "POST",
+if (data.session) {
+  toast.success(
+    "Account created successfully!",
+    {
+      id: toastId,
+    }
+  );
 
-    headers: {
-      "Content-Type":
-        "application/json",
-    },
+  router.push(
+    "/dashboard/generate"
+  );
 
-    body: JSON.stringify({
-      email,
-    }),
-  }
-).catch(console.error);
-
-      router.push(
-        "/dashboard/generate"
-      );
-
-    } else {
+} 
+ else {
       toast.success(
         "Account created! Please check your email to confirm your account.",
         {

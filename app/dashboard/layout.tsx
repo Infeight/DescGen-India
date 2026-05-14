@@ -136,6 +136,7 @@ export default function DashboardLayout({
       const {
         data: { user },
       } =
+
         await supabase.auth.getUser();
 
       if (!user) return;
@@ -153,7 +154,8 @@ export default function DashboardLayout({
           .select(`
             credits_remaining,
             plan,
-            onboarding_completed
+            onboarding_completed,
+              welcome_email_sent
           `)
           .eq(
             "id",
@@ -161,24 +163,54 @@ export default function DashboardLayout({
           )
           .single();
 
+          
+
       if (data) {
-        setCredits(
-          data.credits_remaining
-        );
+  setCredits(
+    data.credits_remaining
+  );
 
-        setPlan(
-          data.plan
-        );
+  setPlan(
+    data.plan
+  );
 
-        if (
-          !data.onboarding_completed
-        ) {
-          setShowOnboarding(
-            true
-          );
-        }
+  if (
+    !data.onboarding_completed
+  ) {
+    setShowOnboarding(
+      true
+    );
+  }
+
+  // Send welcome email only once
+  if (
+    !data.welcome_email_sent
+  ) {
+    fetch(
+      "/api/send-welcome-email",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          email:
+            user.email,
+        }),
       }
+    ).catch(console.error);
 
+    await supabase
+      .from("profiles")
+      .update({
+        welcome_email_sent: true,
+      })
+      .eq("id", user.id);
+  }
+}
       // Realtime subscription
       channel = supabase
         .channel(
