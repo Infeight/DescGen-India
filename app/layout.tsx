@@ -179,6 +179,63 @@ export default function RootLayout({
     >
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <body className="min-h-full flex flex-col">
+
+ <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify({
+        "@context":
+          "https://schema.org",
+
+        "@type":
+          "SoftwareApplication",
+
+        name:
+          "DescGen India",
+
+        applicationCategory:
+          "BusinessApplication",
+
+        operatingSystem:
+          "Web",
+
+        description:
+          "AI-powered product description generator built for Indian e-commerce sellers.",
+
+        url:
+          "https://descgen.shop",
+
+        creator: {
+          "@type":
+            "Organization",
+
+          name:
+            "DescGen India",
+        },
+
+        offers: {
+          "@type":
+            "Offer",
+
+          price:
+            "0",
+
+          priceCurrency:
+            "INR",
+        },
+
+        featureList: [
+          "AI product descriptions",
+          "Marketplace optimization",
+          "Bulk CSV generation",
+          "Brand tone memory",
+          "Multi-platform outputs",
+        ],
+      }),
+    }}
+  />
+
+
         {children}
         <Analytics />
         <Toaster
