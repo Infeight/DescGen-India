@@ -4,7 +4,8 @@ import {
   buildPrompt,
   PromptData,
   VariantKey,
-  PersonalizationData,   
+  PersonalizationData,  
+  GenerationResult 
 } from "./prompt";       
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -25,7 +26,7 @@ export async function generateDescriptions(
   data: PromptData,
   onlyVariant?: VariantKey,
   personalization?: PersonalizationData
-): Promise<{ v1?: string; v2?: string; v3?: string }> {
+): Promise<GenerationResult> {
   let retries = 3;
 
   while (retries > 0) {
@@ -43,7 +44,19 @@ export async function generateDescriptions(
       const text    = result.response.text();
       const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
 
-      return JSON.parse(cleaned) as { v1?: string; v2?: string; v3?: string };
+      return JSON.parse(cleaned) as {
+  v1?: string;
+  v2?: string;
+  v3?: string;
+
+  hsn_code?: string;
+
+  hsn_description?: string;
+
+  category_path?: string;
+
+  platform_category?: string;
+};
 
     } catch (error: any) {
       console.error("GEMINI ERROR:", error);

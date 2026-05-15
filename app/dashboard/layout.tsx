@@ -275,9 +275,9 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen w-full max-w-full overflow-x-hidden bg-black text-white">
+   <div className="flex min-h-screen w-full bg-black text-white">
       {/* SIDEBAR */}
-      <aside className="sticky top-0 hidden h-screen w-72 flex-col border-r border-white/10 bg-white/5 backdrop-blur-2xl lg:flex">
+      <aside className="fixed left-0 top-0 hidden h-screen w-72 border-r border-white/10 bg-white/5 backdrop-blur-2xl lg:flex lg:flex-col">
         {/* Logo */}
         <div className="border-b border-white/10 px-6 py-6">
           <Link href="/">
@@ -396,7 +396,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* MAIN */}
-    <div className="flex w-0 flex-1 flex-col">
+<div className="flex min-w-0 flex-1 flex-col lg:ml-72">
         {/* HEADER */}
        <header className="sticky top-0 z-40 border-b border-white/10 bg-black/50 backdrop-blur-2xl">
   <div className="flex items-center justify-between px-4 py-4 lg:px-8 lg:py-5">
@@ -498,7 +498,7 @@ export default function DashboardLayout({
 </header>
 
         {/* CONTENT */}
-        <main className="w-full overflow-x-hidden p-4 pb-28 lg:p-8">
+        <main className="w-full min-w-0 p-4 pb-28 lg:p-8">
           {children}
         </main>
       </div>

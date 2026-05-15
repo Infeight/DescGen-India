@@ -88,7 +88,34 @@ async function handleLogin(
   } finally {
     setLoading(false);
   }
+
+ 
 }
+
+
+ async function handleGoogleLogin() {
+  const supabase =
+    createClient();
+
+  const {
+    error,
+  } =
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+
+      options: {
+        redirectTo:
+          "https://descgen.shop/auth/callback",
+      },
+    });
+
+  if (error) {
+    toast.error(
+      error.message
+    );
+  }
+}
+
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-black">
@@ -207,7 +234,30 @@ async function handleLogin(
             </p>
           </div>
 
-         
+        {/* google login button  */}
+         <button
+  type="button"
+  onClick={handleGoogleLogin}
+  className="mb-6 flex w-full items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 font-medium text-white transition hover:bg-white/10"
+>
+  <img
+    src="https://www.svgrepo.com/show/475656/google-color.svg"
+    alt="Google"
+    className="h-5 w-5"
+  />
+
+  Continue with Google
+</button>
+
+<div className="mb-6 flex items-center gap-3">
+  <div className="h-px flex-1 bg-white/10" />
+
+  <span className="text-xs uppercase tracking-widest text-gray-500">
+    Or continue with email
+  </span>
+
+  <div className="h-px flex-1 bg-white/10" />
+</div>
 
           {/* Email */}
           <div className="mb-5">

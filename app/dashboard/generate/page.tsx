@@ -69,6 +69,11 @@ interface GenerateResponse {
   v1: string;
   v2: string;
   v3: string;
+  hsn_code?: string;
+  hsn_description?: string;
+  category_path?: string;
+  platform_category?: string;
+    platform?: string;
 }
 
 const VARIANT_LABELS: Record<
@@ -222,6 +227,8 @@ export default function GeneratePage() {
 
       const json =
         await response.json();
+
+        console.log(json);
 
       if (!response.ok) {
         if (
@@ -827,6 +834,90 @@ export default function GeneratePage() {
               />
             </>
           )}
+
+          {result && result.hsn_code && (
+<div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+    <h2 className="mb-4 font-semibold text-white">
+      Listing Helper
+    </h2>
+    <div className="flex flex-col gap-3 text-sm">
+
+      <div className="flex items-start justify-between gap-4 rounded-xl bg-white/5 p-3">
+        <div>
+          <p className="text-xs text-gray-400 mb-0.5">HSN Code</p>
+          <p className="font-mono font-semibold text-white">{result.hsn_code}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{result.hsn_description}</p>
+        </div>
+       <button
+  onClick={() =>
+    handleCopy(
+      result.hsn_code || "",
+      "hsn"
+    )
+  }
+  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300 transition hover:bg-white/10"
+>
+  Copy
+</button>
+      </div>
+
+      <div className="flex items-start justify-between gap-4 rounded-xl bg-white/5 p-3">
+        <div>
+          <p className="text-xs text-gray-400 mb-0.5">Category Path</p>
+          <p className="font-medium text-white">{result.category_path}</p>
+        </div>
+        <button
+          onClick={() =>
+            handleCopy(
+              result.category_path || "",
+              "category"
+            )
+          }
+          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300 transition hover:bg-white/10"
+        >
+          Copy
+        </button>
+      </div>
+
+      <div className="flex items-start justify-between gap-4 rounded-xl bg-white/5 p-3">
+        <div>
+          <p className="text-xs text-gray-400 mb-0.5">{result.platform || "Platform"} Category</p>
+          <p className="font-medium text-white">{result.platform_category}</p>
+        </div>
+        <button
+          onClick={() =>
+            handleCopy(
+              result.platform_category || "",
+              "platform_category"
+            )
+          }
+          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300 transition hover:bg-white/10"
+        >
+          Copy
+        </button>
+      </div>
+
+    </div>
+    <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4">
+  <p className="text-xs leading-6 text-amber-200">
+    AI suggestion — HSN codes may not always
+    be accurate for GST compliance, especially
+    for niche products. Verify with a CA or
+    the official GST portal before filing.
+  </p>
+
+  <a
+    href="https://services.gst.gov.in/services/searchhsnsac"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-3 inline-flex items-center text-xs font-medium text-amber-300 underline hover:text-amber-200"
+  >
+    Verify HSN code on GST Portal →
+  </a>
+</div>
+  </div>
+)}
+
         </div>
       </div>
     </div>
