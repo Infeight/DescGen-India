@@ -536,14 +536,14 @@ export default function DashboardLayout({
 </div>
 
       {/* ONBOARDING */}
-      <OnboardingModal
+      {/* <OnboardingModal
         open={
           showOnboarding
         }
         onClose={
           handleCloseOnboarding
         }
-      />
+      /> */}
     </div>
   );
 }

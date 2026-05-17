@@ -101,27 +101,17 @@ export default function SignupPage() {
     }
 
 
-if (data.session) {
-  toast.success(
-    "Account created successfully!",
-    {
-      id: toastId,
-    }
-  );
+toast.success(
+  "Welcome to DescGen India 🚀",
+  {
+    id: toastId,
+  }
+);
 
-  router.push(
-    "/dashboard/generate"
-  );
+router.push(
+  "/dashboard/generate"
+);
 
-} 
- else {
-      toast.success(
-        "Account created! Please check your email to confirm your account.",
-        {
-          id: toastId,
-        }
-      );
-    }
 
   } catch (err) {
     console.error(err);
@@ -317,6 +307,7 @@ async function handleGoogleLogin() {
               type="email"
               placeholder="Enter your email"
               required
+              autoComplete="email"
               value={email}
               onChange={(e) =>
                 setEmail(
@@ -336,6 +327,7 @@ async function handleGoogleLogin() {
             <input
               type="password"
               placeholder="Minimum 6 characters"
+              autoComplete="new-password"
               required
               minLength={6}
               value={

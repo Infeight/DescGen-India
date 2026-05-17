@@ -297,7 +297,7 @@ async function handleLogin(
             />
           </div>
 
-          <div className="flex justify-end">
+          <div className="mb-6 flex justify-end">
   <Link
     href="/auth/forgot-password"
     className="text-sm text-gray-400 transition hover:text-white"
