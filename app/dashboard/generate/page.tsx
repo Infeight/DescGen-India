@@ -17,6 +17,14 @@ import {
   Wand2,
 } from "lucide-react";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { toast } from "sonner";
 
 const formSchema = z.object({
@@ -709,7 +717,7 @@ export default function GeneratePage() {
                   </label>
 
                   <select
-                    className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition focus:border-fuchsia-500/40"
+                    className="h-[52px] w-full rounded-2xl border border-white/10 bg-black/30 px-4 text-white outline-none transition-all duration-300 hover:border-fuchsia-500/30 hover:bg-gradient-to-r hover:from-fuchsia-500/10 hover:to-cyan-500/10 focus:border-fuchsia-500/40 focus:bg-gradient-to-r focus:from-fuchsia-500/10 focus:to-cyan-500/10"
                     {...register(
                       field.name as keyof FormData
                     )}

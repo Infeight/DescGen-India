@@ -249,6 +249,7 @@ THINGS TO NEVER DO ON ${data.platform.toUpperCase()}:
 ${rules.avoid.map((a) => `- Never: ${a}`).join("\n")}
 
 UNIVERSAL RULES (all platforms):
+- Follow ALL platform-specific formatting rules strictly
 - Use EVERY feature listed — expand each into a selling point, do not skip any
 - Infer logical attributes (e.g. "soft cotton" → also breathable, skin-friendly, sweat-absorbent)
 - Always include pack size, care instructions, and primary use cases

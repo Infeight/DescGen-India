@@ -132,3 +132,16 @@ body {
     @apply font-sans;
   }
 }
+
+
+select {
+  background-color: black;
+  color: white;
+  color-scheme: dark;
+    border-radius: 16px;
+}
+
+option {
+  background-color: black;
+  color: white;
+}
