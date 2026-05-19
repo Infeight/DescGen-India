@@ -204,7 +204,7 @@ export async function POST(req: Request) {
     console.log("===== GENERATE ROUTE HIT =====");
 
     const body = await req.json();
-    const { productName, features, platform, tone, language, onlyVariant } = body;
+    const { productName, features, platform, tone, language, onlyVariant, price } = body;
 
     // onlyVariant is optional — only present on regenerate calls
     const isRegenerate = !!onlyVariant;
@@ -273,6 +273,7 @@ if (!success) {
       platform,
       tone,
       language,
+       price: price ?? undefined,
     },
 
     onlyVariant as

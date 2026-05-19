@@ -93,4 +93,51 @@ export const PLATFORM_RULES: Record<string, PlatformRule> = {
     ],
     avoid: ["30 generic hashtags", "price in caption (DM for price works better)", "long hashtag blocks that bury the CTA", "all-emoji captions"],
   },
+
+  Facebook: {
+  charLimit: 1500,
+  v1Format: "friendly conversational paragraph, warm tone, mention key features naturally, end with message CTA",
+  v2Format: "short punchy paragraph followed by 3-4 feature bullets with emojis, end with comment CTA",
+  v3Format: "2-3 sentences max under 200 chars, emoji opener, price if known, CTA at end",
+  seoKeywords: "include product type, material, occasion, size range, condition (new), location if relevant",
+  strictRules: [
+    "Use warm conversational language — Facebook buyers expect friendly sellers not corporate copy",
+    "End every description with a clear CTA: 'Message to order', 'Comment below', or 'DM for price'",
+    "Include size range and material — top questions buyers ask before messaging",
+    "1-2 emojis per paragraph maximum — enough to stand out, not enough to look spammy",
+    "Keep under 1500 characters — Facebook truncates longer posts in feed",
+    "Always end with a clear CTA on its own line: 'Comment PRICE below', 'Message us to order', or 'DM for availability'",
+  ],
+  avoid: [
+    "Formal corporate language",
+    "ALL CAPS sentences",
+    "More than 5 emojis total",
+    "Fake urgency like 'offer ends tonight' without basis",
+    "Asking buyers to call — always DM or comment",
+  ],
+},
+
+WhatsApp: {
+  charLimit: 700,
+  v1Format: "emoji opener line, 2-3 key features as short lines, price on its own line, stock urgency line, DM CTA at end",
+  v2Format: "product name bold with emoji, feature list with checkmark emojis, price, sizes, DM CTA",
+  v3Format: "ultra short - product + price + one selling point + DM CTA, under 150 chars, 1-2 emojis only",
+  seoKeywords: "price, size range, material, occasion, delivery info if applicable",
+  strictRules: [
+    "Always include price — WhatsApp buyers expect to see price in the caption",
+    "Keep it scannable — buyers read on small screens while scrolling",
+    "End with DM CTA every time: 'DM to order', 'Message ORDER to buy', 'Reply to book'",
+    "Use line breaks between each point — wall of text gets ignored on WhatsApp",
+    "2-4 emojis total — WhatsApp style is casual but not cluttered",
+    "Include sizes if apparel — 'Sizes S-3XL available' reduces back-and-forth messages",
+    "Never add urgency claims like 'limited stock' or 'offer ends soon' unless the seller explicitly mentioned it in their features",
+  ],
+  avoid: [
+    "Long paragraphs — WhatsApp is scanned not read",
+    "No price — biggest reason sellers get zero replies",
+    "Formal language — WhatsApp is personal and casual",
+    "Website links — most WhatsApp sellers don't have one",
+    "More than 5 emojis",
+  ],
+},
 };

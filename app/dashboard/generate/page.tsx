@@ -62,6 +62,8 @@ const formSchema = z.object({
       1,
       "Please select a language"
     ),
+
+    price: z.string().optional(),
 });
 
 type FormData = z.infer<
@@ -193,6 +195,7 @@ export default function GeneratePage() {
     register,
     handleSubmit,
     setValue,
+      watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver:
@@ -200,6 +203,8 @@ export default function GeneratePage() {
   });
 
   const router = useRouter();
+
+   const watchedPlatform = watch("platform");
 
   async function onSubmit(
     data: FormData
@@ -271,6 +276,19 @@ export default function GeneratePage() {
       }
 
       setResult(json);
+
+      if (data.price) {
+  const priceStr   = data.price.replace(/[^\d]/g, "");
+  const v1HasPrice = json.v1?.includes(priceStr);
+  const v2HasPrice = json.v2?.includes(priceStr);
+  const v3HasPrice = json.v3?.includes(priceStr);
+
+  if (!v1HasPrice || !v2HasPrice || !v3HasPrice) {
+    toast.warning(
+      "Price may not have been applied correctly — please check the output before copying."
+    );
+  }
+}
 
       toast.success(
         "Descriptions generated successfully.",
@@ -669,6 +687,8 @@ export default function GeneratePage() {
                   "Flipkart",
                   "Amazon",
                   "Instagram",
+                  "Facebook",
+                  "WhatsApp"
                 ],
               },
 
@@ -751,6 +771,23 @@ export default function GeneratePage() {
                 </div>
               )
             )}
+
+            
+           
+
+{(watchedPlatform === "WhatsApp" || watchedPlatform === "Facebook") && (
+  <div className="flex flex-col gap-1">
+    <input
+      type="text"
+      placeholder="Product price e.g. Rs.499 (shown in caption)"
+      className="h-[52px] w-full rounded-2xl border border-white/10 bg-black/30 px-4 text-sm text-white outline-none transition-all duration-300 hover:border-fuchsia-500/30 focus:border-fuchsia-500/40 focus:bg-gradient-to-r focus:from-fuchsia-500/10 focus:to-cyan-500/10"
+      {...register("price")}
+    />
+    <p className="text-xs text-gray-400">
+      Optional but recommended — buyers expect to see price on {watchedPlatform}
+    </p>
+  </div>
+)}
 
             {/* Button */}
             <button
