@@ -6,6 +6,7 @@ import Features from "@/components/Landing/features";
 import PricingPreview from "@/components/Landing/pricing-preview";
 import FinalCTA from "@/components/Landing/final-cta";
 import Footer from "@/components/Landing/Footer";
+import Testimonials from "@/components/Landing/testimonials";
 
 export default function Home() {
   return (
@@ -17,6 +18,8 @@ export default function Home() {
       <DemoGenerator />
 
       <Features />
+
+      <Testimonials />
 
       <PricingPreview />
 

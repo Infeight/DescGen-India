@@ -48,6 +48,8 @@ export const metadata: Metadata = {
     "product description in Telugu Hindi",
     "AI product listing tool",
     "Indian marketplace seller tool",
+    "HSN code generator",
+    "GST product category generator",
   ],
 
   authors: [
@@ -230,6 +232,8 @@ export default function RootLayout({
           "Bulk CSV generation",
           "Brand tone memory",
           "Multi-platform outputs",
+          "HSN and GST code generation",
+          "Multiple Indian languages",
         ],
       }),
     }}
