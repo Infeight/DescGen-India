@@ -12,132 +12,281 @@ export interface PlatformRule {
 export const PLATFORM_RULES: Record<string, PlatformRule> = {
   Meesho: {
     charLimit: 500,
-    v1Format: "warm conversational paragraph, no bullets, no ALL CAPS, festive/emotional tone",
-    v2Format: "3-4 short bullet points starting with feature name, factual and clear",
-    v3Format: "single punchy sentence under 120 chars, mobile-first",
-    seoKeywords: "include fabric type, occasion (casual/festive/daily), size range (S-3XL), and care method",
-    strictRules: [
-      "No ALL CAPS anywhere — Meesho rejects listings with all-caps",
-      "No exaggerated claims like 'best in world' or 'guaranteed'",
-      "Mention material, size range, and wash care",
-      "Keep each description under 500 characters strictly",
-      "Use simple Hindi-friendly English words (buyers are Tier-2/3 cities)",
-    ],
-    avoid: ["ALL CAPS", "exaggerated superlatives", "price mentions", "competitor names"],
+    v1Format: "simple warm Meesho-style description using easy everyday English, practical product clarity, short sentences, and friendly reseller-friendly tone",
+    v2Format:  "short practical product description followed by simple feature points covering fabric, fit, usage, sizes, and wash care in easy-to-understand wording",
+    v3Format:  "ultra-short mobile-friendly Meesho listing under 120 characters using simple practical wording focused on product clarity",
+    seoKeywords:"naturally include practical buyer search terms like fabric, occasion, size range, daily wear, wash care, and comfort without sounding overly optimized",
+   strictRules: [
+  "Write in simple easy-to-understand English suitable for Tier-2 and Tier-3 buyers",
+
+  "Prioritize clarity and practicality over premium branding language",
+
+  "Use short readable sentences optimized for mobile users",
+
+  "Mention important buyer details clearly: fabric, sizes, occasion, and wash care",
+
+  "Descriptions should feel reseller-friendly and trustworthy",
+
+  "Avoid complicated fashion terminology or advanced English vocabulary",
+
+  "Focus on comfort, usefulness, affordability feel, and everyday wearability",
+
+  "Keep descriptions highly scannable with low reading effort",
+
+  "Avoid sounding like luxury fashion brands or influencer marketing",
+
+  "The tone should feel approachable, practical, and realistic",
+],
+   avoid: [
+  "luxury fashion language",
+  "advanced English vocabulary",
+  "corporate marketing tone",
+  "keyword stuffing",
+  "hard-selling urgency",
+  "long paragraphs",
+  "complex styling language",
+  "overly premium wording",
+  "influencer-style captions",
+],
   },
 
   Flipkart: {
     charLimit: 2000,
-    v1Format: "3-5 bullet points, each starting with a bold feature keyword followed by colon and detail",
-    v2Format: "short paragraph covering material, use case, and value, followed by 3 spec bullets",
-    v3Format: "3 tight bullet points only, under 300 chars total, most important features first",
-    seoKeywords: "include brand (if any), material, product type, gender, occasion, size range, pack count, wash care",
+    v1Format: "Flipkart-style structured feature bullets with practical buyer-focused wording, easy mobile readability, and value-oriented clarity",
+    v2Format:  "short practical overview paragraph followed by concise structured feature bullets highlighting usability, comfort, specifications, and value",
+    v3Format:  "compact Flipkart listing summary under 300 characters using highly scannable practical feature-focused wording",
+    seoKeywords: "naturally include high-intent Flipkart buyer terms like material, product type, usage occasion, size range, fit, pack quantity, and care details without sounding keyword-stuffed",
     strictRules: [
-      "Start with product type + brand/material in the first bullet",
-      "Include pack size (e.g. Pack of 1)",
-      "Mention country of origin if known",
-      "Include warranty or guarantee if applicable",
-      "Use simple structured language — no storytelling, Flipkart buyers are feature-scanners",
-    ],
-    avoid: ["vague claims without specifics", "long paragraphs without bullets", "symbols or special characters"],
+  "Write for practical Flipkart buyers comparing multiple similar products",
+
+  "Descriptions should feel structured, readable, and value-focused",
+
+  "Use concise feature-first formatting with easy mobile readability",
+
+  "Focus on usability, comfort, specifications, and practical benefits",
+
+  "Avoid excessive emotional storytelling or influencer-style language",
+
+  "Use simple and highly scannable sentence structures",
+
+  "Highlight important buyer decision factors clearly: fabric, fit, size, pack quantity, and usage",
+
+  "Descriptions should feel trustworthy, practical, and conversion-focused",
+
+  "Avoid overhyping products — clarity builds more trust on Flipkart",
+
+  "Formatting should feel clean and comparison-friendly",
+],
+    avoid: [
+  "luxury fashion tone",
+  "influencer-style captions",
+  "emotional storytelling",
+  "corporate marketing language",
+  "keyword stuffing",
+  "long unstructured paragraphs",
+  "hard-selling urgency",
+  "overly decorative formatting",
+  "vague product claims",
+],
   },
 
   Amazon: {
     charLimit: 2000,
-    v1Format: "5 bullet points, each opening with ALL CAPS keyword followed by colon then detail sentence",
-    v2Format: "paragraph hook (2 sentences) followed by 5 ALL CAPS bullet points covering features",
-    v3Format: "5 ultra-tight ALL CAPS bullets, one line each, pure keywords + value, under 400 chars total",
-    seoKeywords: "include search terms: 'women ethnic wear', 'kurta for women', size range, fabric, occasion, pack size, care instructions",
+    v1Format: "Amazon-style structured bullet listing with highly scannable feature-first formatting, keyword-rich phrasing, and practical buyer-focused clarity",
+    v2Format:  "short buyer-focused opening paragraph followed by structured ALL CAPS feature bullets emphasizing utility, specifications, sizing, and usage scenarios",
+    v3Format: "ultra-compact Amazon bullet summary using high-value searchable feature keywords and practical benefits under 400 characters",
+    seoKeywords:  "naturally include high-intent Amazon search phrases like fabric type, product category, size range, use case, fit type, care instructions, and pack quantity without keyword stuffing",
     strictRules: [
-      "Bullet openers MUST be ALL CAPS keyword (e.g. PURE COTTON:, PACK OF 1:)",
-      "Include pack size in every description",
-      "Mention size range (S to 3XL) — high-search phrase on Amazon",
-      "Include care instructions (machine wash, hand wash etc.)",
-      "Use both 'kurti' and 'kurta' spellings for SEO coverage",
-      "Include use cases: daily wear, office, festive, casual",
-    ],
-    avoid: ["seller contact info", "website URLs", "price or discount mentions", "shipping promises"],
+  "Write for fast-scanning Amazon shoppers comparing multiple listings",
+
+  "Each bullet must communicate one strong buyer-relevant benefit clearly",
+
+  "Use ALL CAPS feature openers naturally and consistently",
+
+  "Focus on clarity, practicality, specifications, and usability",
+
+  "Descriptions should feel trustworthy, informative, and conversion-focused",
+
+  "Include sizing, fabric, usage occasions, care instructions, and pack details naturally",
+
+  "Avoid emotional storytelling or influencer-style language",
+
+  "Use highly readable sentence structure optimized for mobile shoppers",
+
+  "Keyword integration should feel natural and search-intent aware",
+
+  "Prioritize specificity over hype — concrete details build Amazon trust",
+],
+    avoid: [
+  "emotional storytelling",
+  "influencer-style captions",
+  "generic marketing phrases",
+  "vague claims",
+  "social-media tone",
+  "emoji-heavy writing",
+  "keyword stuffing",
+  "hard-selling urgency",
+  "overly decorative formatting",
+],
   },
 
   Myntra: {
     charLimit: 1000,
-    v1Format: "fashion-forward narrative paragraph, style-focused, mention occasion and outfit pairing tips",
-    v2Format: "style description paragraph followed by 3-4 attribute bullets (fabric, fit, occasion, care)",
-    v3Format: "single confident style statement under 150 chars, fashion-first language",
-    seoKeywords: "include: style category (A-line, straight, anarkali), fabric, fit type, occasion (festive/casual/workwear), season",
-    strictRules: [
-      "Myntra is fashion-forward — use style terminology (silhouette, drape, fit, palette)",
-      "Titles must combine: category + style + fabric + fit + occasion",
-      "Mention size and fit accuracy — reduces return rate (Myntra penalises >15% returns)",
-      "Include styling tips ('pair with palazzos', 'wear with juttis')",
-      "Brand name must appear — Myntra does not allow unbranded listings",
-    ],
-    avoid: ["generic non-fashion language", "price mentions", "misleading fit descriptions", "unbranded product claims"],
+    v1Format: "fashion-forward narrative with aspirational styling language, occasion-based mood, elevated tone, and subtle outfit pairing suggestions that feel premium and editorial",
+    v2Format: "premium style-focused paragraph followed by concise fashion attribute bullets covering silhouette, fabric, fit, occasion, and styling recommendations",
+    v3Format:  "short confident fashion statement under 150 characters that feels stylish, modern, and boutique-premium instead of promotional",
+    seoKeywords: "naturally include fashion-search vocabulary like silhouette, fit, neckline, fabric, occasion, season, and styling aesthetic without sounding keyword-heavy",
+   strictRules: [
+  "Write like a premium fashion brand or stylist, not a marketplace seller",
+
+  "Use fashion vocabulary naturally: silhouette, drape, fit, palette, texture, neckline, layering, etc.",
+
+  "Descriptions should help buyers imagine styling and wearing the outfit",
+
+  "Maintain an aspirational but elegant tone — never aggressive selling",
+
+  "Mention fit clarity and styling compatibility to reduce return confusion",
+
+  "Include outfit pairing suggestions naturally when relevant",
+
+  "Avoid robotic ecommerce phrasing or technical listing tone",
+
+  "Captions should feel editorial, boutique-premium, and visually expressive",
+
+  "Brand presence should feel premium and fashion-aware",
+
+  "Focus on mood, aesthetic, and styling confidence rather than only features",
+],
+   avoid: [
+  "generic ecommerce wording",
+  "technical marketplace language",
+  "hard-selling CTA phrases",
+  "robotic feature stacking",
+  "price-focused language",
+  "cheap-sounding descriptions",
+  "keyword stuffing",
+  "overly basic fashion descriptions",
+  "non-fashion vocabulary",
+],
   },
 
   Instagram: {
     charLimit: 2200,
-    v1Format: "story-style caption: strong hook in first 125 chars (shows before 'more'), then story, then CTA, then 3-5 niche hashtags at end",
-    v2Format: "problem-solution caption: open with a pain point, present product as solution, end with CTA + 3-5 hashtags",
-    v3Format: "ultra-short punchy caption under 125 chars with 1-2 emojis and 3 hashtags — entire caption visible without clicking 'more'",
-    seoKeywords: "use keyword-rich natural sentences (Instagram now uses semantic search), include 3-5 niche hashtags not generic ones",
+    v1Format: "emotion-first Instagram caption with a scroll-stopping hook in the first 1-2 lines, natural storytelling, emotionally expressive but human tone, relatable phrasing, soft social-media rhythm, subtle CTA, and 3-5 niche hashtags at the end",
+    v2Format:  "problem-solution Instagram caption focused on buyer desire, lifestyle transformation, and product benefits while still sounding casual and creator-style instead of corporate",
+    v3Format:  "ultra-short Instagram caption under 125 characters that feels trendy, expressive, and instantly readable without sounding forced or promotional",
+    seoKeywords:  "write naturally keyword-rich captions using fashion/lifestyle/product vocabulary Instagram users actually search for; prioritize semantic relevance over keyword stuffing",
     strictRules: [
-      "First 125 characters are critical — this is all buyers see before 'more' in feed",
-      "Use 3-5 hashtags only — Instagram penalises spam hashtag stuffing (not 20-30)",
-      "Use niche hashtags over generic ones (#CottonKurti over #Fashion)",
-      "End every caption with a CTA: 'Link in bio', 'DM to order', 'Comment SIZE to buy'",
-      "Every Instagram caption MUST include at least 1-3 relevant emojis naturally inside the caption",
-      "Write keyword-rich sentences naturally — Instagram uses semantic search not just hashtags",
-      "Hashtags count toward 2200 char limit — budget accordingly",
-      "Every Instagram variant MUST end with exactly 3-5 niche hashtags on a new line (e.g. #CottonKurti #WomenEthnicWear #SummerFashionIndia). Never skip hashtags.",
-    ],
-    avoid: ["30 generic hashtags", "price in caption (DM for price works better)", "long hashtag blocks that bury the CTA", "all-emoji captions"],
+  "The first 125 characters must emotionally hook the viewer before the 'more' cutoff",
+  
+  "Write like a modern Instagram creator or boutique brand, not a corporate marketing team",
+
+  "Use short and varied sentence lengths for natural social-media rhythm",
+
+  "Avoid robotic CTA phrases like 'Buy now' or 'Shop today'",
+
+  "Use emotionally expressive but minimal emojis naturally — never emoji spam",
+
+  "Make captions feel relatable, aspirational, or aesthetic depending on the product type",
+
+  "Hashtags must be niche and relevant to the actual product category, not generic viral tags",
+
+  "Use conversational phrasing that feels organic in Instagram feeds",
+
+  "Never sound overly optimized, repetitive, or AI-generated",
+
+  "End naturally with subtle engagement prompts like 'DM to order', 'Which color would you pick?', or 'Link in bio ✨'",
+],
+    avoid: [
+  "generic influencer phrases",
+  "robotic marketing language",
+  "corporate brand tone",
+  "overly formal wording",
+  "spam hashtags",
+  "all-caps hooks",
+  "emoji overload",
+  "repetitive CTA endings",
+  "fake urgency like 'LIMITED STOCK'",
+],
   },
 
   Facebook: {
   charLimit: 1500,
-  v1Format: "friendly conversational paragraph, warm tone, mention key features naturally, end with message CTA",
-  v2Format: "short punchy paragraph followed by 3-4 feature bullets with emojis, end with comment CTA",
-  v3Format: "2-3 sentences max under 200 chars, emoji opener, price if known, CTA at end",
-  seoKeywords: "include product type, material, occasion, size range, condition (new), location if relevant",
-  strictRules: [
-    "Use warm conversational language — Facebook buyers expect friendly sellers not corporate copy",
-    "End every description with a clear CTA: 'Message to order', 'Comment below', or 'DM for price'",
-    "Include size range and material — top questions buyers ask before messaging",
-    "1-2 emojis per paragraph maximum — enough to stand out, not enough to look spammy",
-    "Keep under 1500 characters — Facebook truncates longer posts in feed",
-    "Always end with a clear CTA on its own line: 'Comment PRICE below', 'Message us to order', or 'DM for availability'",
-  ],
+  v1Format: "friendly conversational Facebook selling post with warm human tone, natural product mention, trust-building language, and relaxed social-media pacing",
+  v2Format: "casual Facebook marketplace-style post with short engaging introduction followed by easy-to-scan feature lines and soft conversational CTA",
+  v3Format: "short social-selling style Facebook caption under 200 characters that feels personal, friendly, and easy to engage with",
+  seoKeywords: "naturally mention practical buyer details like material, size range, product condition, usage occasion, and delivery/location context without sounding keyword-optimized",
+ strictRules: [
+  "Write like a genuine small business owner or trusted seller, not a corporate brand",
+
+  "Use warm, approachable, and conversational wording",
+
+  "Descriptions should feel believable and socially natural inside Facebook feeds",
+
+  "Avoid aggressive selling language or overhyped claims",
+
+  "Use short readable sections for mobile-first Facebook browsing",
+
+  "CTA should feel casual and inviting like 'DM if interested' or 'Message to order ✨'",
+
+  "Use only minimal natural emojis that support the tone",
+
+  "Focus on comfort, practicality, trust, and everyday usability",
+
+  "Posts should feel easy to comment on, share, or message about",
+
+  "Never sound overly optimized, scripted, or AI-generated",
+],
   avoid: [
-    "Formal corporate language",
-    "ALL CAPS sentences",
-    "More than 5 emojis total",
-    "Fake urgency like 'offer ends tonight' without basis",
-    "Asking buyers to call — always DM or comment",
-  ],
+  "corporate marketing tone",
+  "formal advertising language",
+  "fake urgency",
+  "spammy emoji usage",
+  "hard-selling CTA phrases",
+  "keyword stuffing",
+  "luxury-fashion language",
+  "overly polished influencer tone",
+  "robotic ecommerce formatting",
+],
 },
 
 WhatsApp: {
   charLimit: 700,
-  v1Format: "emoji opener line, 2-3 key features as short lines, price on its own line, stock urgency line, DM CTA at end",
-  v2Format: "product name bold with emoji, feature list with checkmark emojis, price, sizes, DM CTA",
-  v3Format: "ultra short - product + price + one selling point + DM CTA, under 150 chars, 1-2 emojis only",
-  seoKeywords: "price, size range, material, occasion, delivery info if applicable",
-  strictRules: [
-    "Always include price — WhatsApp buyers expect to see price in the caption",
-    "Keep it scannable — buyers read on small screens while scrolling",
-    "End with DM CTA every time: 'DM to order', 'Message ORDER to buy', 'Reply to book'",
-    "Use line breaks between each point — wall of text gets ignored on WhatsApp",
-    "2-4 emojis total — WhatsApp style is casual but not cluttered",
-    "Include sizes if apparel — 'Sizes S-3XL available' reduces back-and-forth messages",
-    "Never add urgency claims like 'limited stock' or 'offer ends soon' unless the seller explicitly mentioned it in their features",
-  ],
-  avoid: [
-    "Long paragraphs — WhatsApp is scanned not read",
-    "No price — biggest reason sellers get zero replies",
-    "Formal language — WhatsApp is personal and casual",
-    "Website links — most WhatsApp sellers don't have one",
-    "More than 5 emojis",
-  ],
+  v1Format:  "warm reseller-style WhatsApp message with a casual conversational tone, short scannable lines, emotional but natural wording, product highlights, pricing, and soft urgency only if seller mentions it",
+  v2Format: "WhatsApp selling message with a friendly product intro followed by short feature lines using natural chat-style formatting and a clear DM/reply CTA",
+  v3Format:  "ultra-short WhatsApp-forward style message under 150 characters that instantly communicates product, price, and buying intent in a natural chat tone",
+  seoKeywords:  "naturally include key buyer questions like price, sizes, fabric, color, delivery availability, and occasion without sounding keyword-stuffed",
+ strictRules: [
+  "Write like a trusted reseller personally recommending the product in chat",
+
+  "Keep messages highly scannable for small mobile screens",
+
+  "Use short line breaks instead of long paragraphs",
+
+  "Price must feel naturally placed, not aggressively promotional",
+
+  "Use only 2-4 soft emojis maximum and place them naturally",
+
+  "Avoid sounding like formal advertising or ecommerce listings",
+
+  "Include sizes and availability clearly when relevant",
+
+  "CTA must feel conversational like 'DM to order', 'Reply if interested', or 'Message to book'",
+
+  "Avoid fake urgency unless seller explicitly mentions limited stock or offers",
+
+  "Messages should feel easy to forward in WhatsApp groups and statuses",
+],
+ avoid: [
+  "formal brand language",
+  "corporate marketing tone",
+  "long paragraphs",
+  "too many emojis",
+  "robotic CTA phrases",
+  "website-style formatting",
+  "fake urgency",
+  "hard-selling language",
+  "spammy discount wording",
+],
 },
 };

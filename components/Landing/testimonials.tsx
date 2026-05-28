@@ -1,7 +1,7 @@
 const testimonials = [
   {
     name: "Sai",
-    brand: "Ecom.sai",
+    brand: "ecom.sai",
     image:
       "/ecomSai.jpeg",
 

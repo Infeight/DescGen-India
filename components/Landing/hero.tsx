@@ -9,24 +9,21 @@ export default function Hero() {
       <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pb-16 pt-20 text-center sm:px-6 sm:pb-24 sm:pt-28">
         {/* Badge */}
         <div className="mb-6 rounded-full border border-fuchsia-500/20 bg-white/5 px-4 py-2 text-xs text-fuchsia-300 backdrop-blur-xl sm:px-5 sm:text-sm">
-          AI-powered descriptions for Indian marketplaces
+         Marketplace-aware AI optimization for Indian sellers
         </div>
 
         {/* Heading */}
         <h1 className="max-w-5xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl">
-          Generate high-converting{" "}
+          Optimize your marketplace listings with{" "}
           <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
-            e-commerce product descriptions
+           platform-aware AI intelligence
           </span>{" "}
-          in seconds.
+         
         </h1>
 
         {/* Subheading */}
         <p className="mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:mt-8 sm:text-lg md:text-xl">
-          Create marketplace-optimized AI descriptions for
-          Meesho, Amazon, Flipkart, Myntra, and Instagram
-          Shops with personalization, bulk generation, and
-          brand-aware AI.
+          Generate marketplace-native listings, preview buyer-facing layouts, analyze product images, and optimize performance across Amazon, Flipkart, Myntra, Meesho, Instagram, WhatsApp & more.
         </p>
 
         {/* Buttons */}
@@ -49,25 +46,29 @@ export default function Hero() {
         {/* Marketplace Logos */}
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3 text-xs text-gray-500 sm:mt-20 sm:gap-6 sm:text-sm">
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Meesho
+            Amazon Optimized
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Amazon India
+           Flipkart Ready
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Flipkart
+            WhatsApp Selling
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Myntra
+            Myntra Fashion Aware
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Instagram Shops
+            Instagram Native
           </span>
         </div>
+
+        <p className="mt-5 text-sm text-gray-500">
+  Platform-native formatting • AI listing scores • Marketplace previews • Image compatibility analysis
+</p>
 
         {/* Dashboard Preview */}
         <div className="relative mt-14 w-full max-w-6xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur-xl sm:mt-20 sm:p-4">
@@ -115,12 +116,11 @@ export default function Hero() {
                 </div>
 
                 <p className="mt-5 text-lg font-semibold text-white">
-                  AI Processing
+                 Marketplace Intelligence
                 </p>
 
                 <p className="mt-2 text-sm text-gray-400">
-                  Marketplace optimized
-                  generation
+                  Platform-aware listing optimization
                 </p>
               </div>
             </div>
@@ -128,7 +128,7 @@ export default function Hero() {
             {/* Output */}
             <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-left sm:p-5">
               <p className="text-sm text-gray-400">
-                AI Output
+                Optimized Listing
               </p>
 
               <div className="mt-5 space-y-4">

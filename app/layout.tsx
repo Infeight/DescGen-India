@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
   title: {
     default:
-      "DescGen India — AI Product Descriptions for Meesho, Amazon & Flipkart",
+      "DescGen India — Marketplace Intelligence for Indian Sellers",
 
     template:
       "%s — DescGen India",
@@ -33,24 +33,24 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Write product listings 10x faster. AI descriptions optimized for Meesho, Amazon India, Flipkart, Myntra & Instagram — in English, Hindi & Telugu. Free to start.",
+    "Generate platform-aware ecommerce listings, preview marketplace layouts, analyze product images, and optimize buyer-facing content for Amazon, Flipkart, Myntra, Meesho, Instagram & WhatsApp using AI-powered marketplace intelligence.",
 
-  keywords: [
-    "product description generator India",
-    "AI listing generator Meesho",
-    "Amazon India product description tool",
-    "Flipkart listing description generator",
-    "bulk product description generator",
-    "AI copywriting for Indian sellers",
-    "Meesho seller tools",
-    "Hindi product description generator",
-    "e-commerce listing tool India",
-    "product description in Telugu Hindi",
-    "AI product listing tool",
-    "Indian marketplace seller tool",
-    "HSN code generator",
-    "GST product category generator",
-  ],
+ keywords: [
+  "AI marketplace intelligence",
+  "ecommerce listing optimization",
+  "Amazon listing AI",
+  "Flipkart seller tools",
+  "Meesho AI listings",
+  "Myntra product optimization",
+  "AI product image analysis",
+  "marketplace listing previews",
+  "Indian ecommerce seller tools",
+  "AI listing analysis",
+  "platform-aware ecommerce AI",
+  "multilingual ecommerce AI",
+  "WhatsApp selling tools India",
+  "Instagram ecommerce AI",
+],
 
   authors: [
     {
@@ -96,10 +96,10 @@ export const metadata: Metadata = {
 
   openGraph: {
     title:
-      "DescGen India — Write Product Listings 10x Faster with AI",
+      "DescGen India — AI Marketplace Intelligence for Indian Sellers",
 
     description:
-      "AI-powered product descriptions for Meesho, Amazon India, Flipkart, Myntra & Instagram. English, Hindi, Telugu. Bulk CSV upload. Free to start.",
+      "Generate marketplace-native listings, analyze product images, preview buyer-facing layouts, and optimize ecommerce performance using AI-powered marketplace intelligence.",
 
     url:
       "https://descgen.shop",
@@ -141,10 +141,10 @@ export const metadata: Metadata = {
       "@descgenindia",
 
     title:
-      "DescGen India — AI Product Descriptions for Indian Sellers",
+      "DescGen India — Marketplace-Aware AI for Ecommerce Sellers",
 
     description:
-      "Generate Meesho, Amazon & Flipkart listings in seconds. Hindi, Telugu & English. Free to start.",
+      "AI-powered marketplace intelligence for Amazon, Flipkart, Myntra, Meesho, Instagram & WhatsApp sellers.",
 
     images: [
       "/og-image.png",
@@ -180,7 +180,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full overflow-x-hidden flex flex-col">
 
  <script
     type="application/ld+json"
@@ -202,7 +202,7 @@ export default function RootLayout({
           "Web",
 
         description:
-          "AI-powered product description generator built for Indian e-commerce sellers.",
+          "AI-powered marketplace intelligence platform for Indian ecommerce sellers. Generate marketplace-native listings, analyze product images, preview buyer-facing layouts, and optimize ecommerce performance across multiple platforms.",
 
         url:
           "https://descgen.shop",
@@ -227,14 +227,16 @@ export default function RootLayout({
         },
 
         featureList: [
-          "AI product descriptions",
-          "Marketplace optimization",
-          "Bulk CSV generation",
-          "Brand tone memory",
-          "Multi-platform outputs",
-          "HSN and GST code generation",
-          "Multiple Indian languages",
-        ],
+  "Marketplace-aware AI listings",
+  "AI listing analysis",
+  "Marketplace preview simulation",
+  "AI product image analysis",
+  "Platform compatibility scoring",
+  "Brand tone memory",
+  "Bulk listing workflows",
+  "Multi-platform optimization",
+  "Multiple Indian languages",
+],
       }),
     }}
   />

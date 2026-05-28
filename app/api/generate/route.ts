@@ -1,197 +1,4 @@
 
-// // app/api/generate/route.ts
-// import { NextResponse } from "next/server";
-// import { generateDescriptions } from "@/lib/gemini";
-// import { createClient } from "@/lib/supabase/server";
-
-// // const supabase = await createClient();
-
-// export async function POST(req: Request) {
-//   try {
-//     console.log("===== GENERATE ROUTE HIT =====");
-
-//     const body = await req.json();
-
-//     console.log("REQUEST BODY:", body);
-
-//     const {
-//       productName,
-//       features,
-//       platform,
-//       tone,
-//       language,
-//     } = body;
-
-//     // validation
-//     if (
-//       !productName ||
-//       !features ||
-//       !platform ||
-//       !tone ||
-//       !language
-//     ) {
-//       console.log("VALIDATION FAILED");
-
-//       return NextResponse.json(
-//         { error: "Missing required fields" },
-//         { status: 400 }
-//       );
-//     }
-
-//     // create SSR supabase client
-//     const supabase = await createClient();
-
-//     console.log("SUPABASE SERVER CLIENT CREATED");
-
-//     // get logged-in user
-//     const {
-//       data: { user },
-//       error: userError,
-//     } = await supabase.auth.getUser();
-
-//     console.log("USER:", user);
-//     console.log("USER ERROR:", userError);
-
-//     // user must exist
-//     if (!user) {
-//       return NextResponse.json(
-//         {
-//           error: "Unauthorized",
-//         },
-//         {
-//           status: 401,
-//         }
-//       );
-//     }
-
-//     // check credits
-// const { data: profile } = await supabase
-//   .from("profiles")
-//   .select("credits_remaining")
-//   .eq("id", user.id)
-//   .single();
-
-// if (
-//   !profile ||
-//   profile.credits_remaining <= 0
-// ) {
-//   return NextResponse.json(
-//     {
-//       error:
-//         "No credits remaining. Please upgrade.",
-//       code: "NO_CREDITS",
-//     },
-//     {
-//       status: 403,
-//     }
-//   );
-// }
-
-//     // AI generation
-//     console.log("STARTING AI GENERATION");
-
-//     const descriptions = await generateDescriptions({
-//       productName,
-//       features,
-//       platform,
-//       tone,
-//       language,
-//     });
-
-//     console.log("AI GENERATION SUCCESS");
-
-//     // save generation
-//     console.log("ATTEMPTING DB INSERT");
-
-//     const {
-//       data: insertedData,
-//       error: insertError,
-//     } = await supabase
-//       .from("generations")
-//       .insert({
-//         user_id: user.id,
-//         product_name: productName,
-//         features,
-//         platform,
-//         tone,
-//         language,
-//         output_v1: descriptions.v1,
-//         output_v2: descriptions.v2,
-//         output_v3: descriptions.v3,
-//       })
-//       .select();
-
-//     console.log("INSERTED DATA:", insertedData);
-//     console.log("INSERT ERROR:", insertError);
-
-//     if (insertError) {
-//       return NextResponse.json(
-//         {
-//           error: insertError.message,
-//           details: insertError,
-//         },
-//         {
-//           status: 500,
-//         }
-//       );
-//     }
-
-//     console.log("INSERT SUCCESS");
-
-//     // deduct credits
-//     console.log("DEDUCTING CREDITS");
-
-//     const { error: creditError } =
-//   await supabase.rpc("decrement_credits", {
-//     uid: user.id,
-//   });
-
-//     console.log("CREDIT ERROR:", creditError);
-
-//     console.log("===== REQUEST COMPLETE =====");
-
-//     return NextResponse.json(descriptions);
-
-//   } catch (error: any) {
-//     console.error("===== ROUTE ERROR =====");
-//     console.error(error);
-
-//     if (error?.status === 429) {
-//       return NextResponse.json(
-//         {
-//           error:
-//             "Too many requests. Please wait a moment and try again.",
-//         },
-//         {
-//           status: 429,
-//         }
-//       );
-//     }
-
-//     if (error instanceof SyntaxError) {
-//       return NextResponse.json(
-//         {
-//           error:
-//             "AI returned invalid output. Please try again.",
-//         },
-//         {
-//           status: 502,
-//         }
-//       );
-//     }
-
-    
-//     return NextResponse.json(
-//       {
-//         error:
-//           "Generation failed. Please try again.",
-//       },
-//       {
-//         status: 500,
-//       }
-//     );
-//   }
-// }
 
 import { NextResponse } from "next/server";
 import { generateDescriptions } from "@/lib/gemini";
@@ -252,7 +59,9 @@ if (!success) {
     target_audience,
     writing_style,
     preferred_cta,
-    platform_tones
+    platform_tones,
+    free_image_analysis_date,
+    free_image_analyses_used
   `)
   .eq("id", user.id)
   .single();
@@ -343,7 +152,10 @@ console.log(
 );
 
     console.log("===== REQUEST COMPLETE =====");
-    return NextResponse.json(descriptions);
+    
+    return NextResponse.json(
+      {descriptions:descriptions, freeImageAnalysisDate: profile?.free_image_analysis_date, freeImageAnalysesUsed: profile?.free_image_analyses_used }
+    );
 
   } catch (error: any) {
     console.error("===== ROUTE ERROR =====", error);
@@ -361,7 +173,7 @@ console.log(
       );
     }
     return NextResponse.json(
-      { error: "Generation failed. Please try again." },
+      { error: "AI generation servers are experiencing high demand right now. Please try again in a moment." },
       { status: 500 }
     );
   }
