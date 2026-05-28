@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 import {
   Menu,
@@ -12,6 +13,64 @@ import {
 export default function Navbar() {
   const [open, setOpen] =
     useState(false);
+
+  const [user, setUser] =
+  useState<any>(null);
+
+const [loading, setLoading] =
+  useState(true);
+
+const supabase =
+  createClient();
+  
+  
+  useEffect(() => {
+  const getSession =
+    async () => {
+      const {
+        data: { session },
+      } =
+        await supabase.auth.getSession();
+
+      setUser(
+        session?.user ?? null
+      );
+
+      setLoading(false);
+    };
+
+  getSession();
+
+  const {
+    data: authListener,
+  } =
+    supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(
+          session?.user ?? null
+        );
+      }
+    );
+
+  return () => {
+    authListener.subscription.unsubscribe();
+  };
+}, []);
+
+if (loading) {
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6">
+        <div className="h-7 w-40 animate-pulse rounded bg-white/10" />
+
+        <div className="hidden gap-4 md:flex">
+          <div className="h-10 w-20 animate-pulse rounded-xl bg-white/10" />
+          <div className="h-10 w-28 animate-pulse rounded-xl bg-white/10" />
+        </div>
+      </div>
+    </header>
+  );
+}
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl">
@@ -52,21 +111,52 @@ export default function Navbar() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden items-center gap-4 md:flex">
-          <Link
-            href="/auth/signin"
-            className="text-sm text-gray-300 transition hover:text-white"
-          >
-            Login
-          </Link>
+       {/* Desktop Actions */}
+<div className="hidden items-center gap-4 md:flex">
+  {user ? (
+    <>
+      <Link
+        href="/dashboard/generate"
+        className="rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-2 text-sm font-medium text-white transition hover:scale-[1.02]"
+      >
+        Generate
+      </Link>
 
-          <Link
-            href="/auth/signup"
-            className="rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-2 text-sm font-medium text-white transition hover:scale-[1.02]"
-          >
-            Start Free
-          </Link>
-        </div>
+      <button
+        onClick={async () => {
+          await fetch(
+            "/auth/logout",
+            {
+              method: "POST",
+            }
+          );
+
+          window.location.href =
+            "/";
+        }}
+        className="text-sm text-gray-300 transition hover:text-white"
+      >
+        Logout
+      </button>
+    </>
+  ) : (
+    <>
+      <Link
+        href="/auth/signin"
+        className="text-sm text-gray-300 transition hover:text-white"
+      >
+        Login
+      </Link>
+
+      <Link
+        href="/auth/signup"
+        className="rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-2 text-sm font-medium text-white transition hover:scale-[1.02]"
+      >
+        Start Free
+      </Link>
+    </>
+  )}
+</div>
 
         {/* Mobile Menu Button */}
         <button
@@ -118,43 +208,59 @@ export default function Navbar() {
             </a>
 
             <div className="mt-2 flex flex-col gap-3">
-           <div className="mt-2 flex flex-col gap-3">
-  <Link
-    href="/auth/signin"
-    onClick={() =>
-      setOpen(false)
-    }
-    className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
-  >
-    Login
-  </Link>
+          <div className="mt-2 flex flex-col gap-3">
+  {user ? (
+    <>
+      <Link
+        href="/dashboard/generate"
+        onClick={() =>
+          setOpen(false)
+        }
+        className="flex items-center justify-center rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
+      >
+        Generate
+      </Link>
 
-  <Link
-    href="/auth/signup"
-    onClick={() =>
-      setOpen(false)
-    }
-    className="flex items-center justify-center rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
-  >
-    Start Free
-  </Link>
+      <button
+        onClick={async () => {
+          await fetch(
+            "/auth/logout",
+            {
+              method: "POST",
+            }
+          );
 
-  {/* Divider */}
-  <div className="my-2 border-t border-white/10" />
+          window.location.href =
+            "/";
+        }}
+        className="flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
+      >
+        Logout
+      </button>
+    </>
+  ) : (
+    <>
+      <Link
+        href="/auth/signin"
+        onClick={() =>
+          setOpen(false)
+        }
+        className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10"
+      >
+        Login
+      </Link>
 
-  {/* Logout */}
-  <button
-    onClick={async () => {
-      await fetch("/auth/logout", {
-        method: "POST",
-      });
-
-      window.location.href = "/";
-    }}
-    className="flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
-  >
-    Logout
-  </button>
+      <Link
+        href="/auth/signup"
+        onClick={() =>
+          setOpen(false)
+        }
+        className="flex items-center justify-center rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
+      >
+        Start Free
+      </Link>
+    </>
+  )}
 </div>
 </div>
           </nav>

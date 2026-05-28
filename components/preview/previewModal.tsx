@@ -653,7 +653,7 @@ const warnings =
             <div className="xl:max-h-[calc(90vh-160px)] xl:overflow-y-auto xl:pr-2" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.1) transparent" }}>
              
                {image && (
-    <div className="flex">
+    <div className="flex flex-col gap-2.5">
     <button
       onClick={onAnalyzeImage}
       disabled={
@@ -691,7 +691,7 @@ hover:before:translate-x-full
 }
     </button>
 
-{<p className="mt-2 text-xs text-right text-gray-500">
+{<p className="mt-2 text-xs text-center text-gray-500">
   {imageAlreadyAnalyzed
     ? "Upload a new image to analyze again."
     : `${freeImageAnalysisAvailable ? '1' : '0'} free AI image analysis available.`}
