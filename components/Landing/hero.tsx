@@ -6,6 +6,7 @@ export default function Hero() {
       {/* Background Glow */}
       <div className="absolute left-1/2 top-20 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
 
+ 
       <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pb-16 pt-20 text-center sm:px-6 sm:pb-24 sm:pt-28">
         {/* Badge */}
         <div className="mb-6 rounded-full border border-fuchsia-500/20 bg-white/5 px-4 py-2 text-xs text-fuchsia-300 backdrop-blur-xl sm:px-5 sm:text-sm">
@@ -41,34 +42,46 @@ export default function Hero() {
           >
             Try Live Demo
           </a>
+
+          
         </div>
+
+       
 
         {/* Marketplace Logos */}
         <div className="mt-14 flex flex-wrap items-center justify-center gap-3 text-xs text-gray-500 sm:mt-20 sm:gap-6 sm:text-sm">
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Amazon Optimized
+            Amazon
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-           Flipkart Ready
+           Flipkart
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            WhatsApp Selling
+            WhatsApp
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Myntra Fashion Aware
+            Myntra
           </span>
 
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
-            Instagram Native
+            Instagram
+          </span>
+
+          <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
+            Meesho
           </span>
         </div>
 
         <p className="mt-5 text-sm text-gray-500">
   Platform-native formatting • AI listing scores • Marketplace previews • Image compatibility analysis
 </p>
+
+<div className="mt-6 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300">
+   Built from feedback of Indian ecommerce sellers
+</div>
 
         {/* Dashboard Preview */}
         <div className="relative mt-14 w-full max-w-6xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur-xl sm:mt-20 sm:p-4">

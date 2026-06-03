@@ -108,6 +108,16 @@ if (loading) {
           >
             Demo
           </a>
+
+           <a
+              href="/#founding-creators"
+              onClick={() =>
+                setOpen(false)
+              }
+              className="transition hover:text-white"
+            >
+              Founding Creators
+            </a>
         </nav>
 
         {/* Desktop Actions */}
@@ -205,6 +215,16 @@ if (loading) {
               className="transition hover:text-white"
             >
               Demo
+            </a>
+
+            <a
+              href="/#founding-creators"
+              onClick={() =>
+                setOpen(false)
+              }
+              className="transition hover:text-white"
+            >
+              Founding Creators
             </a>
 
             <div className="mt-2 flex flex-col gap-3">

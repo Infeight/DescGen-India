@@ -245,13 +245,26 @@ export default function PricingPage() {
             Listings with AI
           </h1>
 
-          <p className="mt-6 text-lg leading-8 text-gray-400">
+          <div className="mt-6 inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-sm text-amber-200">
+  🚀 Public Beta • Payments are temporarily unavailable while we complete payment provider onboarding.
+</div>
+
+          {/* <p className="mt-6 text-lg leading-8 text-gray-400">
             Generate marketplace-ready
             product descriptions for
             Meesho, Amazon India,
             Flipkart, Myntra, and
             Instagram Shops.
-          </p>
+          </p> */}
+
+          <p className="mt-6 text-lg leading-8 text-gray-400">
+  Every new account currently receives
+  <span className="font-semibold text-white">
+    {" "}10 free credits{" "}
+  </span>
+  during our public beta.
+  Payments will be enabled soon.
+</p>
         </div>
 
         {/* Pricing Grid */}
@@ -360,16 +373,16 @@ export default function PricingPage() {
                   </div>
 
                   {/* CTA */}
-                  <button
+                  <button disabled
                     onClick={() =>
                       handleUpgrade(
                         plan
                       )
                     }
-                    disabled={
-                      paying ===
-                      plan.id
-                    }
+                    // disabled={
+                    //   paying ===
+                    //   plan.id
+                    // }
                     className={`mt-10 rounded-2xl px-5 py-4 text-sm font-semibold transition duration-300 ${
                       isPopular
                         ? "bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-white shadow-lg shadow-fuchsia-500/20 hover:scale-[1.02]"
@@ -389,12 +402,16 @@ export default function PricingPage() {
 
         {/* Bottom */}
         <div className="mt-16 text-center">
-          <p className="text-sm text-gray-500">
+          {/* <p className="text-sm text-gray-500">
             Secure payments powered
             by Razorpay • Cancel
             anytime • GST invoices
             available
-          </p>
+          </p> */}
+
+          <p className="text-sm text-gray-500">
+  Public Beta • Every new account receives 10 free credits • Payments coming soon
+</p>
         </div>
       </div>
     </div>

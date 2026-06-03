@@ -6,6 +6,7 @@ import Features from "@/components/Landing/features";
 import PricingPreview from "@/components/Landing/pricing-preview";
 import FinalCTA from "@/components/Landing/final-cta";
 import Footer from "@/components/Landing/Footer";
+import FoundingCreators from "@/components/Landing/foundingCreators";
 import Testimonials from "@/components/Landing/testimonials";
 
 export default function Home() {
@@ -18,6 +19,8 @@ export default function Home() {
       <DemoGenerator />
 
       <Features />
+
+      <FoundingCreators />
 
       <Testimonials />
 

@@ -127,12 +127,20 @@ export default function Footer() {
       Terms of Service
     </Link>
 
+
     <a
       href="mailto:vrmtarun7@gmail.com"
       className="transition hover:text-white"
     >
       Support
     </a>
+
+      <a
+  href="mailto:tarundandugula1@gmail.com"
+  className="transition hover:text-white"
+>
+  Found a bug? Tell us.
+</a>
   </div>
 </div>
 </div>

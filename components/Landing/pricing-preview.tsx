@@ -172,7 +172,7 @@ export default function PricingPreview() {
 
               {/* CTA */}
               <Link
-                href="/signup"
+                href="/auth/signup"
                 className={`mt-8 flex items-center justify-center rounded-2xl px-5 py-4 text-sm font-semibold transition sm:mt-10 ${
                   plan.highlight
                     ? "bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-white hover:scale-[1.02]"

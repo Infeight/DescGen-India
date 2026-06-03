@@ -197,6 +197,11 @@ const [previewOpen, setPreviewOpen] =
     v3: any;
   } | null>(null);
 
+  const [
+  feedbackSubmitted,
+  setFeedbackSubmitted,
+] = useState(false);
+
 const [analysisLoading, setAnalysisLoading] =
   useState(false);
 
@@ -314,7 +319,7 @@ const freeImageAnalysisAvailable = result?.freeImageAnalysisDate && new Date(res
             "NO_CREDITS"
         ) {
           toast.error(
-            "No credits remaining. Upgrade required.",
+            "Need more credits? Send us feedback and we'll happily top up your account.",
             {
               id: toastId,
             }
@@ -539,6 +544,39 @@ const freeImageAnalysisAvailable = result?.freeImageAnalysisDate && new Date(res
     setImageAnalysisLoading(
       false
     );
+  }
+}
+
+// forr product hunt feedback submission
+async function submitFeedback(
+  feedback: string
+) {
+  try {
+    await fetch(
+      "/api/feedback",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          feedback,
+
+          platform:
+            watchedPlatform,
+        }),
+      }
+    );
+
+    setFeedbackSubmitted(
+      true
+    );
+
+  } catch (err) {
+    console.error(err);
   }
 }
 
@@ -1135,6 +1173,8 @@ setImageAnalysis(null);
               </div>
             )}
 
+           
+
           {loading && (
             <div className="flex flex-col gap-5">
               {[1, 2, 3].map(
@@ -1325,6 +1365,52 @@ const res =
 </div>
   </div>
 )}
+
+
+ { result && !feedbackSubmitted && (
+  <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5">
+    <h3 className="text-sm font-medium text-white">
+      Was this generation useful?
+    </h3>
+
+    <p className="mt-1 text-xs text-gray-400">
+      Your feedback helps improve DescGen India.
+    </p>
+
+    <div className="mt-4 flex gap-3">
+      <button
+        onClick={() =>
+          submitFeedback(
+            "useful"
+          )
+        }
+        className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300 transition hover:bg-emerald-500/20"
+      >
+        👍 Useful
+      </button>
+
+      <button
+        onClick={() =>
+          submitFeedback(
+            "needs_improvement"
+          )
+        }
+        className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-sm text-amber-300 transition hover:bg-amber-500/20"
+      >
+        👎 Needs Improvement
+      </button>
+    </div>
+  </div>
+)}
+
+{feedbackSubmitted && (
+  <div className="mt-8 rounded-3xl border border-emerald-500/20 bg-emerald-500/10 p-5">
+    <p className="text-sm text-emerald-300">
+      Thank you for helping improve DescGen India 🚀
+    </p>
+  </div>
+)}
+
 
         </div>
       </div>
