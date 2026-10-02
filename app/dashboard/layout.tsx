@@ -139,7 +139,12 @@ export default function DashboardLayout({
 
         await supabase.auth.getUser();
 
-      if (!user) return;
+      if (!user) {
+  router.push(
+    "/auth/signin?redirect=/dashboard/generate"
+  );
+  return;
+}
 
       setUserId(user.id);
 
@@ -294,6 +299,26 @@ export default function DashboardLayout({
           </p>
         </div>
 
+        {/* Workspace Switch */}
+<div className="p-5">
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-2">
+
+    {/* Seller - Active */}
+    <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/10 p-3 text-white">
+      🛍 Seller Workspace
+    </div>
+
+    {/* Creator */}
+    <Link
+      href="/creator"
+      className="mt-2 flex items-center gap-3 rounded-xl p-3 text-gray-400 transition hover:bg-white/5 hover:text-white"
+    >
+      🎬 Creator Studio
+    </Link>
+
+  </div>
+</div>
+
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto px-4 py-6">
           <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
@@ -410,11 +435,28 @@ export default function DashboardLayout({
           </button>
         </SheetTrigger>
 
-        <SheetContent
-          side="left"
-          className="w-72 border-white/10 bg-black text-white"
-        >
-          <div className="mt-8 flex flex-col gap-2">
+       <SheetContent
+  side="left"
+  className="w-72 border-white/10 bg-black text-white"
+>
+  {/* Workspace Switch */}
+  <div className="mt-8 mb-6 rounded-2xl border border-white/10 bg-white/5 p-2">
+
+    <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/10 p-3 text-white">
+      🛍 Seller Workspace
+    </div>
+
+    <Link
+      href="/creator"
+      className="mt-2 flex items-center gap-3 rounded-xl p-3 text-gray-400 transition hover:bg-white/5 hover:text-white"
+    >
+      🎬 Creator Studio
+    </Link>
+
+  </div>
+
+  {/* Seller Navigation */}
+  <div className="flex flex-col gap-2">
             {NAV.map((item) => {
               const Icon =
                 item.icon;
@@ -461,6 +503,9 @@ export default function DashboardLayout({
         </p>
       </div>
     </div>
+
+
+    
 
     {/* Desktop Left */}
     <div className="hidden lg:block">

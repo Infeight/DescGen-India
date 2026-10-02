@@ -1,6 +1,53 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function Hero() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const loadUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setUser(user);
+      setLoading(false);
+    };
+
+    loadUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const sellerHref = loading
+    ? "#"
+    : user
+      ? "/dashboard/generate"
+      : "/auth/signup?redirect=/dashboard/generate";
+
+  const creatorHref = loading
+    ? "#"
+    : user
+      ? "/creator"
+      : "/auth/signup?redirect=/creator";
+
+
   return (
     <section className="relative overflow-hidden">
       {/* Background Glow */}
@@ -10,41 +57,113 @@ export default function Hero() {
       <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 pb-16 pt-20 text-center sm:px-6 sm:pb-24 sm:pt-28">
         {/* Badge */}
         <div className="mb-6 rounded-full border border-fuchsia-500/20 bg-white/5 px-4 py-2 text-xs text-fuchsia-300 backdrop-blur-xl sm:px-5 sm:text-sm">
-         Marketplace-aware AI optimization for Indian sellers
+       Built for Indian Sellers & Creators
         </div>
 
         {/* Heading */}
         <h1 className="max-w-5xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl">
-          Optimize your marketplace listings with{" "}
+          Grow your ecommerce brand with{" "}
           <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
-           platform-aware AI intelligence
+          platform-aware AI intelligence
           </span>{" "}
          
         </h1>
 
         {/* Subheading */}
         <p className="mt-6 max-w-3xl text-base leading-7 text-gray-400 sm:mt-8 sm:text-lg md:text-xl">
-          Generate marketplace-native listings, preview buyer-facing layouts, analyze product images, and optimize performance across Amazon, Flipkart, Myntra, Meesho, Instagram, WhatsApp & more.
+          Generate marketplace-native listings,
+create creator content kits,
+analyze product images,
+and optimize performance across
+Amazon, Flipkart, Instagram,
+WhatsApp and more.
         </p>
 
         {/* Buttons */}
         <div className="mt-8 flex w-full max-w-screen-sm flex-col gap-4 sm:mt-10 sm:flex-row">
+
           <Link
-            href="/auth/signup"
+           href={sellerHref}
             className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-8 py-4 font-semibold text-white transition hover:scale-[1.02]"
           >
-            Start Generating Free
+            Seller Workspace
           </Link>
 
-          <a
-            href="/#demo"
+          <Link
+            href={creatorHref}
             className="w-full rounded-2xl border border-white/10 bg-white/5 px-8 py-4 font-semibold text-white backdrop-blur-xl transition hover:bg-white/10"
           >
-            Try Live Demo
-          </a>
+           <span
+ className="
+ absolute
+ -right-2
+ -top-2
+
+ rounded-full
+
+ bg-fuchsia-500
+
+ px-2
+ py-1
+
+ text-[10px]
+ font-bold
+ text-white
+ "
+>
+NEW
+</span>
+
+🎬 Creator Studio
+          </Link>
 
           
         </div>
+
+           <div className="mt-6 w-full max-w-2xl rounded-3xl border border-cyan-500/20 bg-gradient-to-r from-fuchsia-500/5 to-cyan-500/5 p-5 backdrop-blur-xl">
+
+  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+    <div className="text-left">
+
+      <p className="text-sm font-medium text-cyan-300">
+        ✨ New
+      </p>
+
+      <h3 className="mt-1 text-lg font-bold text-white">
+        Creator Studio
+      </h3>
+
+      <p className="mt-2 text-sm text-gray-400">
+        Create content.
+Win brand deals.
+Grow your audience.
+      </p>
+
+    </div>
+
+    <Link
+        href={creatorHref}
+      className="
+      rounded-2xl
+      border
+      border-cyan-500/20
+      bg-cyan-500/10
+      px-6
+      py-3
+      font-medium
+      text-cyan-200
+      transition
+      hover:bg-cyan-500/20
+      "
+    >
+      Explore →
+    </Link>
+
+  </div>
+
+</div>
+
 
        
 
@@ -73,6 +192,18 @@ export default function Hero() {
           <span className="rounded-full border border-white/10 px-4 py-2 sm:px-5">
             Meesho
           </span>
+
+          <span className="
+rounded-full
+border
+border-cyan-500/20
+bg-cyan-500/10
+px-4
+py-2
+text-cyan-200
+">
+🎬 Creator Studio
+</span>
         </div>
 
         <p className="mt-5 text-sm text-gray-500">
@@ -80,7 +211,7 @@ export default function Hero() {
 </p>
 
 <div className="mt-6 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300">
-   Built from feedback of Indian ecommerce sellers
+   Built from feedback of Indian sellers and creators
 </div>
 
         {/* Dashboard Preview */}

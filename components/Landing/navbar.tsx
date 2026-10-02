@@ -20,8 +20,10 @@ export default function Navbar() {
 const [loading, setLoading] =
   useState(true);
 
-const supabase =
-  createClient();
+const [supabase] =
+  useState(() =>
+    createClient()
+  );
   
   
   useEffect(() => {
@@ -120,34 +122,104 @@ if (loading) {
             </a>
         </nav>
 
+
+        <div
+  className="
+  hidden
+  md:flex
+  items-center
+
+  rounded-2xl
+  border
+  border-white/10
+
+  bg-white/5
+
+  p-1
+
+  backdrop-blur-xl
+  "
+>
+  <Link
+    href="/dashboard/generate"
+    className="
+    rounded-xl
+    px-4
+    py-2
+
+    text-sm
+    text-fuchsia-200
+
+    transition
+
+    hover:bg-fuchsia-500/10
+    "
+  >
+    🛍 Seller
+  </Link>
+
+  <Link
+    href="/creator"
+    className="
+    rounded-xl
+
+    px-4
+    py-2
+
+    text-sm
+
+    text-cyan-200
+
+    transition
+
+    hover:bg-cyan-500/10
+    "
+  >
+    🎬 Creator
+  </Link>
+</div>
+
         {/* Desktop Actions */}
        {/* Desktop Actions */}
 <div className="hidden items-center gap-4 md:flex">
   {user ? (
     <>
-      <Link
+      {/* <Link
         href="/dashboard/generate"
         className="rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-2 text-sm font-medium text-white transition hover:scale-[1.02]"
       >
         Generate
-      </Link>
+      </Link> */}
 
-      <button
-        onClick={async () => {
-          await fetch(
-            "/auth/logout",
-            {
-              method: "POST",
-            }
-          );
+     <button
+  onClick={async () => {
+    try {
+      const { error } =
+        await supabase.auth.signOut();
 
-          window.location.href =
-            "/";
-        }}
-        className="text-sm text-gray-300 transition hover:text-white"
-      >
-        Logout
-      </button>
+      if (error) {
+        console.error(
+          "Logout error:",
+          error
+        );
+        return;
+      }
+
+      setUser(null);
+      setOpen(false);
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error(
+        "Logout failed:",
+        error
+      );
+    }
+  }}
+  className="text-sm text-gray-300 transition hover:text-white"
+>
+  Logout
+</button>
     </>
   ) : (
     <>
@@ -158,12 +230,12 @@ if (loading) {
         Login
       </Link>
 
-      <Link
+      {/* <Link
         href="/auth/signup"
         className="rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-2 text-sm font-medium text-white transition hover:scale-[1.02]"
       >
         Start Free
-      </Link>
+      </Link> */}
     </>
   )}
 </div>
@@ -187,6 +259,53 @@ if (loading) {
       {open && (
         <div className="border-t border-white/10 bg-black/95 px-4 py-5 backdrop-blur-2xl md:hidden">
           <nav className="flex flex-col gap-5 text-sm text-gray-300">
+
+            <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 p-3">
+
+<p className="mb-3 text-xs uppercase tracking-wider text-gray-500">
+  Workspaces
+</p>
+
+<div className="grid gap-3">
+
+<Link
+ href="/dashboard/generate"
+ className="
+ rounded-xl
+ border
+ border-fuchsia-500/20
+ bg-fuchsia-500/10
+
+ p-4
+
+ text-fuchsia-200
+ "
+>
+🛍 Seller Workspace
+</Link>
+
+<Link
+ href="/creator"
+ className="
+ rounded-xl
+
+ border
+ border-cyan-500/20
+
+ bg-cyan-500/10
+
+ p-4
+
+ text-cyan-200
+ "
+>
+🎬 Creator Studio
+</Link>
+
+</div>
+
+</div>
+
             <a
               href="#features"
               onClick={() =>
@@ -227,38 +346,61 @@ if (loading) {
               Founding Creators
             </a>
 
-            <div className="mt-2 flex flex-col gap-3">
+            
           <div className="mt-2 flex flex-col gap-3">
-  {user ? (
-    <>
-      <Link
-        href="/dashboard/generate"
-        onClick={() =>
-          setOpen(false)
-        }
-        className="flex items-center justify-center rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
-      >
-        Generate
-      </Link>
+ {user ? (
+  <>
+    <Link
+      href="/dashboard/generate"
+      onClick={() =>
+        setOpen(false)
+      }
+      className="flex items-center justify-center rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/10 px-5 py-3 text-sm font-medium text-fuchsia-200 transition hover:bg-fuchsia-500/20"
+    >
+      🛍 Seller Workspace
+    </Link>
 
-      <button
-        onClick={async () => {
-          await fetch(
-            "/auth/logout",
-            {
-              method: "POST",
-            }
-          );
+    <Link
+      href="/creator"
+      onClick={() =>
+        setOpen(false)
+      }
+      className="flex items-center justify-center rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-5 py-3 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/20"
+    >
+      🎬 Creator Studio
+    </Link>
 
-          window.location.href =
-            "/";
-        }}
-        className="flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
-      >
-        Logout
-      </button>
-    </>
-  ) : (
+    <button
+  onClick={async () => {
+    try {
+      const { error } =
+        await supabase.auth.signOut();
+
+      if (error) {
+        console.error(
+          "Logout error:",
+          error
+        );
+        return;
+      }
+
+      setUser(null);
+      setOpen(false);
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error(
+        "Logout failed:",
+        error
+      );
+    }
+  }}
+  className="flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm font-medium text-red-300 transition hover:bg-red-500/20"
+>
+  Logout
+</button>
+  </>
+)  : (
     <>
       <Link
         href="/auth/signin"
@@ -270,7 +412,7 @@ if (loading) {
         Login
       </Link>
 
-      <Link
+      {/* <Link
         href="/auth/signup"
         onClick={() =>
           setOpen(false)
@@ -278,11 +420,11 @@ if (loading) {
         className="flex items-center justify-center rounded-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90"
       >
         Start Free
-      </Link>
+      </Link> */}
     </>
   )}
 </div>
-</div>
+
           </nav>
         </div>
       )}

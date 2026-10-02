@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 import { toast } from "sonner";
 
@@ -16,10 +19,20 @@ import Link from "next/link";
 
 import { createClient } from "@/lib/supabase/client";
 
-const supabase =
-  createClient();
+
+
+
 
 export default function LoginPage() {
+
+  const supabase =
+  createClient();
+
+  const searchParams= useSearchParams();
+
+const redirect =
+  searchParams.get("redirect") ||
+  "/dashboard/generate";
   const router = useRouter();
 
   const [email, setEmail] =
@@ -64,16 +77,16 @@ async function handleLogin(
       return;
     }
 
-    toast.success(
-      "Welcome back!",
-      {
-        id: toastId,
-      }
-    );
+    toast.success("Welcome back!", {
+  id: toastId,
+});
 
-    router.push(
-      "/dashboard/generate"
-    );
+// Refresh server auth state
+router.refresh();
+
+// Replace instead of push
+router.replace(redirect);
+    console.log("REDIRECT:", redirect);
 
   } catch (error) {
     console.error(error);
@@ -93,26 +106,54 @@ async function handleLogin(
 }
 
 
- async function handleGoogleLogin() {
-  const supabase =
-    createClient();
+//  async function handleGoogleLogin() {
+//   const supabase =
+//     createClient();
 
-  const {
-    error,
-  } =
+//     console.log("GOOGLE REDIRECT =", redirect);
+
+//   const {
+//     error,
+//   } =
+  
+//     await supabase.auth.signInWithOAuth({
+//       provider: "google",
+
+//       options: {
+//         redirectTo:
+// `https://descgen.shop/auth/callback?next=${encodeURIComponent(redirect)}`
+//       },
+//     });
+
+//   if (error) {
+//     toast.error(
+//       error.message
+//     );
+//   }
+// }
+
+async function handleGoogleLogin() {
+  const supabase = createClient();
+
+  const origin = window.location.origin;
+
+  console.log("redirect =", redirect);
+
+  console.log(
+  `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirect)}`
+);
+
+  const { error } =
     await supabase.auth.signInWithOAuth({
       provider: "google",
-
       options: {
         redirectTo:
-          "https://descgen.shop/auth/callback",
+          `${origin}/auth/callback?next=${encodeURIComponent(redirect)}`,
       },
     });
 
   if (error) {
-    toast.error(
-      error.message
-    );
+    toast.error(error.message);
   }
 }
 
@@ -326,9 +367,9 @@ async function handleLogin(
             Don&apos;t have an account?{" "}
             <span
               onClick={() =>
-                router.push(
-                  "/auth/signup"
-                )
+               router.push(
+  `/auth/signup?redirect=${encodeURIComponent(redirect)}`
+)
               }
               className="cursor-pointer font-medium text-white transition hover:text-fuchsia-400"
             >

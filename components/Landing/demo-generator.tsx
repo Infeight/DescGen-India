@@ -110,7 +110,7 @@ export default function DemoGenerator() {
         {/* Heading */}
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-            Experience the AI Generator
+            Experience the Seller Workspace
           </h2>
 
           <p className="mt-4 text-base leading-7 text-gray-400 sm:mt-5 sm:text-lg">

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
 
 import { toast } from "sonner";
 
@@ -15,11 +15,24 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 
-const supabase =
-  createClient();
+
+
+
+ 
 
 export default function SignupPage() {
+
+  const supabase =
+  createClient();
+
+   const searchParams = useSearchParams();
+
+const redirect =
+  searchParams.get("redirect") ||
+  "/dashboard/generate";
   const router = useRouter();
+
+  console.log("Redirect URL:", redirect);
 
   const [email, setEmail] =
     useState("");
@@ -108,9 +121,7 @@ toast.success(
   }
 );
 
-router.push(
-  "/dashboard/generate"
-);
+router.push(redirect);
 
 
   } catch (err) {
@@ -130,25 +141,21 @@ router.push(
 
 
 async function handleGoogleLogin() {
-  const supabase =
-    createClient();
+  const supabase = createClient();
 
-  const {
-    error,
-  } =
+  const origin = window.location.origin;
+
+  const { error } =
     await supabase.auth.signInWithOAuth({
       provider: "google",
-
       options: {
         redirectTo:
-          "https://descgen.shop/auth/callback",
+          `${origin}/auth/callback?next=${encodeURIComponent(redirect)}`,
       },
     });
 
   if (error) {
-    toast.error(
-      error.message
-    );
+    toast.error(error.message);
   }
 }
 
@@ -380,8 +387,8 @@ async function handleGoogleLogin() {
             <span
               onClick={() =>
                 router.push(
-                  "/auth/signin"
-                )
+  `/auth/signin?redirect=${encodeURIComponent(redirect)}`
+)
               }
               className="cursor-pointer font-medium text-white transition hover:text-cyan-400"
             >
